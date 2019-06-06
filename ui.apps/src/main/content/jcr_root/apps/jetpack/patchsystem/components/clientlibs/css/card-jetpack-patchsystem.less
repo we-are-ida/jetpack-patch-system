@@ -1,0 +1,115 @@
+// List view style
+
+.list header[class^="card-"] .sort {
+    margin: 0 0.5rem 0 0;
+    width: 1.9rem;;
+}
+
+th:nth-child(1){
+    width: 1px;
+}
+
+th:nth-child(2){
+    width: 20% !important;
+}
+
+th:nth-child(3){
+    width: 50% !important;
+}
+
+th:nth-child(4), th:nth-child(5){
+    width: 15% !important;
+}
+
+th{
+    min-width: inherit !important;
+}
+
+tr.card-jetpack-patchsystem {
+    .card-page {
+        padding-left: 2.8125rem;
+        border-bottom: 0.0625rem solid #f2f2f2;
+        padding-right: 0.625rem;
+    }
+
+    .foundation-collection-item-thumbnail{
+        text-align: center;
+    }
+
+    .foundation-collection-item-project {
+        .main-sync {
+            margin-top: 0.4375rem;
+            float: left;
+            width: 50%;
+
+            h4 {
+                margin-top: 0;
+                margin-bottom: 0;
+                display: block;
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                font-weight: bold;
+                color: #333333;
+            }
+        }
+    }
+
+    .foundation-collection-item-status {
+        &--error {
+            color: #fa7d73;
+        }
+
+        &--success {
+            color: #b3da8a;
+        }
+
+        &--info {
+            color: #96c8ff;
+        }
+
+        &--warning {
+            color: #fad782;
+        }
+
+        &--new {
+            color: #0b65e5;
+        }
+    }
+
+    .foundation-collection-item-showOutput {
+        &__result{
+            display: none;
+        }
+    }
+
+    .jetpack-admin-patchsystem,
+    .coral-Tooltip {
+        word-break: break-word;
+    }
+}
+
+.groovy-run {
+    &--success {
+        color: #b3da8a;
+    }
+
+    &--failed {
+        color: #fa7d73;
+    }
+}
+
+.coral3-Dialog{
+    .coral3-Dialog-wrapper{
+        .coral3-Dialog-content{
+            overflow-y: scroll;
+            max-height: 80vh;
+        }
+    }
+}
+
+
+
+
+

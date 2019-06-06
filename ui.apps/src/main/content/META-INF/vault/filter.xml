@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/jetpack/patchsystem"/>
+    <filter root="/home/users/system/jetpack-patch-system"/>
+
+    <filter root="/apps/cq/core/content/nav" mode="update" />
+
+    <filter root="/var/patches" mode="update"/>
+
+    <filter root="/rep:policy"/>
+</workspaceFilter>

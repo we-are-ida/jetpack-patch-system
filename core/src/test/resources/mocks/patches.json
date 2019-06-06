@@ -1,0 +1,38 @@
+{
+    "jcr:primaryType": "nt:folder",
+    "project-A": {
+      "jcr:primaryType": "nt:folder",
+      "script-1.groovy": {
+        "jcr:primaryType": "nt:file",
+        "jcr:content": {
+          "jcr:data": "//Hello Script 1"
+        }
+      }
+    },
+    "project-B": {
+      "jcr:primaryType": "sling:Folder",
+      "jcr:title": "Project B",
+      "script-2.groovy": {
+        "jcr:primaryType": "nt:file",
+        "jcr:content": {
+          "jcr:data": "//Hello Script 2"
+        }
+      },
+      "sub-project-B": {
+        "jcr:primaryType": "sling:Folder",
+        "jcr:title": "Sub-Project B",
+        "nested-script-3.groovy": {
+          "jcr:primaryType": "nt:file",
+          "jcr:content": {
+            "jcr:data": "//Hello Script 3"
+          }
+        }
+      }
+    },
+    "script-4.groovy": {
+      "jcr:primaryType": "nt:file",
+      "jcr:content": {
+        "jcr:data": "//Hello Script 4"
+      }
+    }
+}

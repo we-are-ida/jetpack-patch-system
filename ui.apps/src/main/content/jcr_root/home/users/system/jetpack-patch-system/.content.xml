@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:rep="internal"
+          jcr:primaryType="rep:SystemUser"
+          jcr:uuid="2e015298-930f-34de-aa8f-b0177806a64d"
+          rep:authorizableId="jetpack-patch-system"
+          rep:principalName="jetpack-patch-system"/>

@@ -1,0 +1,34 @@
+<tr data-sly-use.model="be.ida.jetpack.patchsystem.models.PatchFileWithResult"
+    class="foundation-collection-item foundation-collection-navigator card-jetpack-patchsystem"
+    is="coral-table-row"
+    data-path="${model.path}"
+    data-project="${model.project}"
+    data-script="${model.script}"
+    data-rootsource="${model.path}">
+
+    <td class="foundation-collection-item-thumbnail" is="coral-table-cell" coral-table-rowselect>
+        <img itemprop="thumbnail" class="thumbnail-img" src="${model.thumbnail}" alt="">
+    </td>
+
+    <td class="foundation-collection-item-project" is="coral-table-cell">
+        <div class="main-sync">
+            <h4>${model.project || "-"}</h4>
+        </div>
+    </td>
+
+    <td class="foundation-collection-item-script" is="coral-table-cell">
+        ${model.script}
+    </td>
+
+    <td class="foundation-collection-item-status" is="coral-table-cell">
+        <span class="foundation-collection-item-status--${model.statusClass}">${model.status}</span>
+    </td>
+
+    <td class="foundation-collection-item-dateExecuted" is="coral-table-cell">
+        <span class="date">${model.dateExecuted}</span>
+    </td>
+    <td class="foundation-collection-item-showOutput" is="coral-table-cell">
+        <a class="foundation-collection-item-showOutput__link" data-script="${model.script}" data-sly-test="${model.output}" href="#">Result</a>
+        <div data-sly-test="${model.output}" class="foundation-collection-item-showOutput__result"><pre>${model.output}</pre></div>
+    </td>
+</tr>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        jcr:mixinTypes="[sling:VanityPath]"
+        jcr:primaryType="nt:unstructured"
+        jcr:title="Jetpack Patch System"
+        sling:resourceType="granite/ui/components/shell/collectionpage"
+        currentView="list"
+        modeGroup="jetpack-admin-patchsystem"
+        sling:vanityPath="/jetpack/patch-system"
+        pageURITemplate="/libs/cq/i18n/translator.html{+id}"
+        targetCollection=".jetpack-admin-patchsystem">
+        <head jcr:primaryType="nt:unstructured">
+            <viewport
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/admin/page/viewport"/>
+            <meta
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/meta"
+                content="chrome=1"
+                name="X-UA-Compatible"/>
+            <winmode
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="cq/gui/components/siteadmin/admin/page/winmode"/>
+            <title
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Jetpack Patch System Control Center"
+                sling:resourceType="cq/gui/components/siteadmin/admin/page/title"/>
+            <favicon
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/page/favicon"/>
+            <clientlibs
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/includeclientlibs"
+                categories="[coralui3,granite.ui.coral.foundation,jetpack.admin.patchsystem]"/>
+        </head>
+        <views jcr:primaryType="nt:unstructured">
+            <list
+                granite:rel="jetpack-admin-patchsystem"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/table"
+                itemprop="item"
+                layoutId="list"
+                limit="{Long}40"
+                maximized="{Boolean}true"
+                modeGroup="jetpack-admin-patchsystem"
+                path="${requestPathInfo.suffix}"
+                selectionMode="row"
+                sortMode="local"
+                stateId="jetpack.admin.patchsystem">
+                <columns
+                    jcr:primaryType="nt:unstructured"
+                    class="card-jetpack-patchsystem">
+                    <select
+                        jcr:primaryType="nt:unstructured"
+                        select="{Boolean}false"/>
+                    <project
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="Project"
+                        class="project"
+                        sortable="{Boolean}false"/>
+                    <script
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="Script"
+                        class="script"
+                        columnGroup="metadata"
+                        sortable="{Boolean}false"/>
+                    <status
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="Status"
+                        class="status"
+                        columnGroup="metadata"
+                        sortable="{Boolean}false"/>
+                    <dateExecuted
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="Date Executed"
+                        class="dateExecuted"
+                        sortable="{Boolean}false"/>
+                </columns>
+                <datasource
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="jetpack/patchsystem/components/resourcesdatasource"
+                    itemResourceType="jetpack/patchsystem/components/resourceconfig"
+                    limit="${empty requestPathInfo.selectors[1] ? &quot;40&quot; : requestPathInfo.selectors[1]}"
+                    offset="${requestPathInfo.selectors[0]}"/>
+            </list>
+        </views>
+        <actions jcr:primaryType="nt:unstructured">
+            <secondary jcr:primaryType="nt:unstructured">
+                <runnew
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/coral/foundation/collection/action"
+                    action="cq-admin.jetpack.patchsystem.action.trigger"
+                    text="Trigger Patch System"
+                    title="Trigger Patch System will run all new and re-run patches"
+                    variant="primary">
+                </runnew>
+                <classicUI
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/coral/foundation/collection/actionlink"
+                    text="Groovy Console"
+                    title="Groovy Console"
+                    href="/groovyconsole"
+                    variant="primary">
+                </classicUI>
+            </secondary>
+            <selection jcr:primaryType="nt:unstructured">
+                <runGroovyScript
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="granite/ui/components/coral/foundation/collection/action"
+                    action="cq-admin.jetpack.patchsystem.action.rungroovy"
+                    activeSelectionCount="multiple"
+                    icon="play"
+                    rel="jetpack-admin-patchsystem-action-rungroovy"
+                    target=".jetpack-admin-patchsystem"
+                    text="Run"
+                    title="Run"
+                    variant="actionBar">
+                </runGroovyScript>
+            </selection>
+        </actions>
+    </jcr:content>
+    <edit/>
+</jcr:root>
