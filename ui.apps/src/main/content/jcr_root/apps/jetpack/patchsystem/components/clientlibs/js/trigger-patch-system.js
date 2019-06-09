@@ -54,7 +54,7 @@
 
             var deferred = $.Deferred();
             $.ajax({
-                url: "/services/trigger/patches",
+                url: "/services/patches/trigger",
                 type: "POST",
                 contentType: "application/json"
             }).fail(function(result, opt) {
