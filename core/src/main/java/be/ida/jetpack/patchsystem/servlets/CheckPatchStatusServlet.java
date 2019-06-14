@@ -1,7 +1,7 @@
 package be.ida.jetpack.patchsystem.servlets;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.models.jobs.JobResult;
+import be.ida.jetpack.patchsystem.executors.JobResult;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import com.google.gson.Gson;
 import org.apache.sling.api.SlingHttpServletRequest;

@@ -1,4 +1,4 @@
-package be.ida.jetpack.patchsystem.models;
+package be.ida.jetpack.patchsystem.groovy.models;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;

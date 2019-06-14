@@ -2,7 +2,7 @@ package be.ida.jetpack.patchsystem.servlets;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida.jetpack.patchsystem.servlets.responsemodels.PatchesListResponse;
 import com.google.gson.Gson;
 import org.apache.http.entity.ContentType;
@@ -39,7 +39,7 @@ public class HasPatchesToExecuteServlet extends SlingAllMethodsServlet {
     private PatchSystemJobService patchSystemJobService;
 
     @Reference
-    private PatchSystemService patchSystemService;
+    private GroovyPatchSystemService patchSystemService;
 
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) {

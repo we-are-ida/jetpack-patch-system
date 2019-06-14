@@ -2,10 +2,12 @@ package be.ida.jetpack.patchsystem.services.impl;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.executors.PatchJobExecutor;
+import be.ida.jetpack.patchsystem.executors.JobResult;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.jobs.JobResult;
+import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.event.jobs.Job;
@@ -16,10 +18,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component(
@@ -38,7 +37,10 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     private JobManager jobManager;
 
     @Reference
-    private PatchSystemService patchSystemService;
+    private GroovyPatchSystemService groovyPatchSystemService;
+
+    @Reference
+    private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
     public boolean executePatch(String patchPath) {
@@ -57,12 +59,7 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
 
     @Override
     public List<String> executeNewPatches() {
-        List<PatchFile> patchFiles = patchSystemService.getPatchesToExecute();
-
-        List<String> patchesToRun = patchFiles
-                .stream()
-                .map(PatchFile::getPath)
-                .collect(Collectors.toList());
+        List<String> patchesToRun = getAllPatchesToExecute();
 
         if (!CollectionUtils.isEmpty(patchesToRun)) {
             boolean success = executePatches(patchesToRun);
@@ -74,6 +71,16 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
         }
 
         return patchesToRun;
+    }
+
+    @Override
+    public List<String> getAllPatchesToExecute() {
+        List<PatchFile> patchFiles = groovyPatchSystemService.getPatchesToExecute();
+
+        return patchFiles
+                .stream()
+                .map(PatchFile::getPath)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -91,17 +98,5 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
         }
 
         return new JobResult(false);
-    }
-
-    @Override
-    public List<String> getAllPatchesToExecute() {
-        List<PatchFile> patchFiles = patchSystemService.getPatchesToExecute();
-
-        List<String> patchesToRun = patchFiles
-                .stream()
-                .map(PatchFile::getPath)
-                .collect(Collectors.toList());
-
-        return patchesToRun;
     }
 }

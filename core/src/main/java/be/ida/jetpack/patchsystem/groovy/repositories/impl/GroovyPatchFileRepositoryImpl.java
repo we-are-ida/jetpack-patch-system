@@ -1,9 +1,8 @@
-package be.ida.jetpack.patchsystem.repositories.impl;
+package be.ida.jetpack.patchsystem.groovy.repositories.impl;
 
-import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.PatchFolder;
-import be.ida.jetpack.patchsystem.repositories.PatchFileRepository;
-import be.ida.jetpack.patchsystem.repositories.PatchResultRepository;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida.jetpack.patchsystem.groovy.models.PatchFolder;
+import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;
 import com.day.crx.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -20,11 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 @Component(
-        name = "Jetpack - Patch File Repository",
-        service = PatchFileRepository.class
+        name = "Jetpack - Groovy Patch File Repository",
+        service = GroovyPatchFileRepository.class
 )
-public class PatchFileRepositoryImpl implements PatchFileRepository {
-    private final static Logger LOG = LoggerFactory.getLogger(PatchResultRepository.class);
+public class GroovyPatchFileRepositoryImpl implements GroovyPatchFileRepository {
+    private final static Logger LOG = LoggerFactory.getLogger(GroovyPatchFileRepositoryImpl.class);
 
     private static final String ROOT = "/apps/patches";
 
@@ -34,15 +33,14 @@ public class PatchFileRepositoryImpl implements PatchFileRepository {
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
 
-
     @Override
-    public PatchFile getPatch(String path)  {
-        PatchFile patchFile = null;
+    public GroovyPatchFile getPatch(String path)  {
+        GroovyPatchFile patchFile = null;
 
         try (ResourceResolver resourceResolver = resourceResolverFactory.getServiceResourceResolver(getCredentials())) {
             Resource resource = resourceResolver.getResource(path);
             if (resource != null) {
-                patchFile = resource.adaptTo(PatchFile.class);
+                patchFile = resource.adaptTo(GroovyPatchFile.class);
                 if (patchFile != null) {
                     PatchFolder patchFolder = getPatchFolder(resource.getParent());
                     if (patchFolder != null) {
@@ -51,7 +49,7 @@ public class PatchFileRepositoryImpl implements PatchFileRepository {
                 }
             }
         } catch (LoginException e) {
-            LOG.error("Couldn't login to get PatchFile", e);
+            LOG.error("Couldn't login to get GroovyPatchFile", e);
         }
 
         return patchFile;
@@ -74,8 +72,8 @@ public class PatchFileRepositoryImpl implements PatchFileRepository {
     }
 
     @Override
-    public List<PatchFile> getPatches() {
-        List<PatchFile> patches = new ArrayList<>();
+    public List<GroovyPatchFile> getPatches() {
+        List<GroovyPatchFile> patches = new ArrayList<>();
 
         try (ResourceResolver resourceResolver = resourceResolverFactory.getServiceResourceResolver(getCredentials())) {
             Resource root = resourceResolver.getResource(ROOT);
@@ -83,14 +81,14 @@ public class PatchFileRepositoryImpl implements PatchFileRepository {
                 patches = scanFolderForPatches(root, null);
             }
         } catch (LoginException e) {
-            LOG.error("Couldn't login to get PatchFile", e);
+            LOG.error("Couldn't login to get GroovyPatchFile", e);
         }
 
         return patches;
     }
 
-    private List<PatchFile> scanFolderForPatches(Resource resource, PatchFolder parent) {
-        List<PatchFile> patchFiles = new ArrayList<>();
+    private List<GroovyPatchFile> scanFolderForPatches(Resource resource, PatchFolder parent) {
+        List<GroovyPatchFile> patchFiles = new ArrayList<>();
 
         Iterable<Resource> subResources = resource.getChildren();
         for (Resource subResource : subResources) {
@@ -104,7 +102,7 @@ public class PatchFileRepositoryImpl implements PatchFileRepository {
                 }
             } else if (subResource.getResourceType().equals(JcrConstants.NT_FILE)
                     && subResource.getName().endsWith(".groovy")) {
-                PatchFile patchFile = subResource.adaptTo(PatchFile.class);
+                GroovyPatchFile patchFile = subResource.adaptTo(GroovyPatchFile.class);
                 if (patchFile != null) {
                     patchFile.setParentFolder(parent);
                     patchFiles.add(patchFile);

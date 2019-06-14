@@ -1,8 +1,8 @@
 package be.ida.jetpack.patchsystem.executors;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.models.PatchResult;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
 import org.apache.sling.event.jobs.consumer.JobExecutionResult;
@@ -27,7 +27,7 @@ public class PatchJobExecutorTest {
     private PatchJobExecutor patchJobExecutor;
 
     @Mock
-    private PatchSystemService patchSystemService;
+    private GroovyPatchSystemService patchSystemService;
 
     @Mock
     private Job job;
@@ -78,7 +78,7 @@ public class PatchJobExecutorTest {
         JobExecutionResult failedJobExecutionResult = mock(JobExecutionResult.class);
         given(resultBuilder.succeeded()).willReturn(successJobExecutionResult);
 
-        given(patchSystemService.runPatch("/path/to/script-1.groovy")).willReturn(new PatchResult());
+        given(patchSystemService.runPatch("/path/to/script-1.groovy")).willReturn(new GroovyPatchResult());
 
         List<String> list = new ArrayList<>();
         list.add("/path/to/script-1.groovy");
@@ -98,8 +98,8 @@ public class PatchJobExecutorTest {
         JobExecutionResult failedJobExecutionResult = mock(JobExecutionResult.class);
         given(resultBuilder.succeeded()).willReturn(successJobExecutionResult);
 
-        given(patchSystemService.runPatch("/path/to/script-1.groovy")).willReturn(new PatchResult());
-        given(patchSystemService.runPatch("/path/to/script-2.groovy")).willReturn(new PatchResult());
+        given(patchSystemService.runPatch("/path/to/script-1.groovy")).willReturn(new GroovyPatchResult());
+        given(patchSystemService.runPatch("/path/to/script-2.groovy")).willReturn(new GroovyPatchResult());
 
         List<String> list = new ArrayList<>();
         list.add("/path/to/script-1.groovy");

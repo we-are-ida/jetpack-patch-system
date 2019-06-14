@@ -1,5 +1,7 @@
-package be.ida.jetpack.patchsystem.models;
+package be.ida.jetpack.patchsystem.groovy.models;
 
+import be.ida.jetpack.patchsystem.models.PatchFile;
+import be.ida.jetpack.patchsystem.models.PatchResult;
 import com.adobe.cq.commerce.common.ValueMapDecorator;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.SyntheticResource;

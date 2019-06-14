@@ -1,6 +1,6 @@
 package be.ida.jetpack.patchsystem.services;
 
-import be.ida.jetpack.patchsystem.models.jobs.JobResult;
+import be.ida.jetpack.patchsystem.executors.JobResult;
 
 import java.util.List;
 

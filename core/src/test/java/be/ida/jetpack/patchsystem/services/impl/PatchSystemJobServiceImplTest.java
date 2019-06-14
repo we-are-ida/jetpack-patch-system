@@ -2,9 +2,9 @@ package be.ida.jetpack.patchsystem.services.impl;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.executors.PatchJobExecutor;
-import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.jobs.JobResult;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida.jetpack.patchsystem.executors.JobResult;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.JobManager;
@@ -32,7 +32,7 @@ public class PatchSystemJobServiceImplTest {
     private JobManager jobManager;
 
     @Mock
-    private PatchSystemService patchSystemService;
+    private GroovyPatchSystemService patchSystemService;
 
     @Test
     public void testExecutePatches_empty() {
@@ -103,15 +103,15 @@ public class PatchSystemJobServiceImplTest {
     @Test
     public void testExecuteNewPatches_2Found_success() {
         //given
-        PatchFile patchFile1 = mock(PatchFile.class);
+        GroovyPatchFile patchFile1 = mock(GroovyPatchFile.class);
         given(patchFile1.getPath()).willReturn("/apps/patch/path1.groovy");
-        PatchFile patchFile2 = mock(PatchFile.class);
+        GroovyPatchFile patchFile2 = mock(GroovyPatchFile.class);
         given(patchFile2.getPath()).willReturn("/apps/patch/path2.groovy");
-        List<PatchFile> patchFiles = new ArrayList<>();
+        List<GroovyPatchFile> patchFiles = new ArrayList<>();
         patchFiles.add(patchFile1);
         patchFiles.add(patchFile2);
 
-        given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
+        //TODO given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
 
         List<String> patches = Arrays.asList(new String[] {"/apps/patch/path1.groovy", "/apps/patch/path2.groovy"});
 
@@ -129,15 +129,15 @@ public class PatchSystemJobServiceImplTest {
     @Test
     public void testExecuteNewPatches_2Found_failed() {
         //given
-        PatchFile patchFile1 = mock(PatchFile.class);
+        GroovyPatchFile patchFile1 = mock(GroovyPatchFile.class);
         given(patchFile1.getPath()).willReturn("/apps/patch/path1.groovy");
-        PatchFile patchFile2 = mock(PatchFile.class);
+        GroovyPatchFile patchFile2 = mock(GroovyPatchFile.class);
         given(patchFile2.getPath()).willReturn("/apps/patch/path2.groovy");
-        List<PatchFile> patchFiles = new ArrayList<>();
+        List<GroovyPatchFile> patchFiles = new ArrayList<>();
         patchFiles.add(patchFile1);
         patchFiles.add(patchFile2);
 
-        given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
+        //TODO given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
 
         List<String> patches = Arrays.asList(new String[] {"/apps/patch/path1.groovy", "/apps/patch/path2.groovy"});
 

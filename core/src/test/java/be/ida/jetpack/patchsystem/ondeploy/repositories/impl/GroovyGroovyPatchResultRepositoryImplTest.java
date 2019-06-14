@@ -1,10 +1,11 @@
-package be.ida.jetpack.patchsystem.repositories.impl;
+package be.ida.jetpack.patchsystem.ondeploy.repositories.impl;
 
 import be.ida.jetpack.carve.manager.ModelManager;
 import be.ida.jetpack.carve.manager.exception.ModelManagerException;
-import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.PatchFolder;
-import be.ida.jetpack.patchsystem.models.PatchResult;
+import be.ida.jetpack.patchsystem.groovy.repositories.impl.GroovyPatchResultRepositoryImpl;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida.jetpack.patchsystem.groovy.models.PatchFolder;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
@@ -23,10 +24,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PatchResultRepositoryImplTest {
+public class GroovyGroovyPatchResultRepositoryImplTest {
 
     @InjectMocks
-    private PatchResultRepositoryImpl repository;
+    private GroovyPatchResultRepositoryImpl repository;
 
     @Mock
     private ModelManager modelManager;
@@ -37,13 +38,13 @@ public class PatchResultRepositoryImplTest {
     @Before
     public void setUp() {
         context.load().json("/mocks/patches.json", "/apps/patches");
-        context.addModelsForClasses(PatchFile.class, PatchFolder.class);
+        context.addModelsForClasses(GroovyPatchFile.class, PatchFolder.class);
     }
 
     @Test
     public void testGetPatchResult_withFolder() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
         PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
@@ -51,17 +52,17 @@ public class PatchResultRepositoryImplTest {
         patchFile.setParentFolder(patchFolder);
 
         //given
-        given(modelManager.retrieve(PatchResult.class, "project-A/script-1.groovy")).willReturn(new PatchResult());
+        given(modelManager.retrieve(GroovyPatchResult.class, "project-A/script-1.groovy")).willReturn(new GroovyPatchResult());
 
         //test
-        PatchResult patchResult = repository.getResult(patchFile);
+        GroovyPatchResult patchResult = repository.getResult(patchFile);
         assertThat(patchResult).isNotNull();
     }
 
     @Test
     public void testGetPatchResult_withNestedFolder() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-B/sub-project-B/nested-script-3.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-B");
         PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
@@ -73,54 +74,54 @@ public class PatchResultRepositoryImplTest {
         patchFile.setParentFolder(subPatchFolder);
 
         //given
-        given(modelManager.retrieve(PatchResult.class, "project-B/sub-project-B/nested-script-3.groovy")).willReturn(new PatchResult());
+        given(modelManager.retrieve(GroovyPatchResult.class, "project-B/sub-project-B/nested-script-3.groovy")).willReturn(new GroovyPatchResult());
 
         //test
-        PatchResult patchResult = repository.getResult(patchFile);
+        GroovyPatchResult patchResult = repository.getResult(patchFile);
         assertThat(patchResult).isNotNull();
     }
 
     @Test
     public void testGetPatchResult_withoutFolder() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/script-4.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
-        given(modelManager.retrieve(PatchResult.class, "script-4.groovy")).willReturn(new PatchResult());
+        given(modelManager.retrieve(GroovyPatchResult.class, "script-4.groovy")).willReturn(new GroovyPatchResult());
 
-        PatchResult patchResult = repository.getResult(patchFile);
+        GroovyPatchResult patchResult = repository.getResult(patchFile);
         assertThat(patchResult).isNotNull();
     }
 
     @Test
     public void testGetPatchResult_withoutFolder_notFound() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/script-4.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
-        given(modelManager.retrieve(PatchResult.class, "script-4.groovy")).willReturn(null);
+        given(modelManager.retrieve(GroovyPatchResult.class, "script-4.groovy")).willReturn(null);
 
-        PatchResult patchResult = repository.getResult(patchFile);
+        GroovyPatchResult patchResult = repository.getResult(patchFile);
         assertThat(patchResult).isNull();
     }
 
     @Test
     public void testGetPatchResult_exception() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/script-4.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
-        given(modelManager.retrieve(PatchResult.class, "script-4.groovy")).willThrow(ModelManagerException.class);
+        given(modelManager.retrieve(GroovyPatchResult.class, "script-4.groovy")).willThrow(ModelManagerException.class);
 
-        PatchResult patchResult = repository.getResult(patchFile);
+        GroovyPatchResult patchResult = repository.getResult(patchFile);
         assertThat(patchResult).isNull();
     }
 
     @Test
     public void testCreatePatchResult_withoutFolder_notFound() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/script-4.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
-        modelManager.persist(any(PatchResult.class));
+        modelManager.persist(any(GroovyPatchResult.class));
 
-        PatchResult patchResult = repository.createResult(patchFile);
+        GroovyPatchResult patchResult = repository.createResult(patchFile);
         assertThat(patchResult).isNotNull();
         assertThat(patchResult.getId()).isEqualTo("script-4.groovy");
         assertThat(patchResult.getStatus()).isEqualTo("RUNNING");
@@ -132,7 +133,7 @@ public class PatchResultRepositoryImplTest {
     @Test
     public void testCreatePatchResult_withFolder_notFound() throws ModelManagerException {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-B/sub-project-B/nested-script-3.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-B");
         PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
@@ -143,16 +144,16 @@ public class PatchResultRepositoryImplTest {
         subPatchFolder.setParent(patchFolder);
         patchFile.setParentFolder(subPatchFolder);
 
-        modelManager.persist(any(PatchResult.class));
+        modelManager.persist(any(GroovyPatchResult.class));
 
-        PatchResult patchResult = repository.createResult(patchFile);
+        GroovyPatchResult patchResult = repository.createResult(patchFile);
         assertThat(patchResult).isNotNull();
         assertThat(patchResult.getId()).isEqualTo("project-B/sub-project-B/nested-script-3.groovy");
     }
 
     @Test
     public void testUpdatePatchResult() throws ModelManagerException {
-        PatchResult patchResult = new PatchResult("100", "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult("100", "RUNNING", Calendar.getInstance());
 
         modelManager.persist(patchResult);
 
@@ -162,7 +163,7 @@ public class PatchResultRepositoryImplTest {
 
     @Test
     public void testUpdatePatchResult_exception() throws ModelManagerException {
-        PatchResult patchResult = new PatchResult("100", "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult("100", "RUNNING", Calendar.getInstance());
 
         willThrow(new ModelManagerException("message")).given(modelManager).persist(patchResult);
 

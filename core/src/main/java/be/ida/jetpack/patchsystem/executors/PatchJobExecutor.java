@@ -1,8 +1,9 @@
 package be.ida.jetpack.patchsystem.executors;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.models.PatchResult;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
+import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;
@@ -30,7 +31,10 @@ public class PatchJobExecutor implements JobExecutor {
     private static final long ETA = -1L;
 
     @Reference
-    private PatchSystemService patchSystemService;
+    private GroovyPatchSystemService groovyPatchSystemService;
+
+    @Reference
+    private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
     public JobExecutionResult process(Job job, JobExecutionContext context) {
@@ -57,7 +61,7 @@ public class PatchJobExecutor implements JobExecutor {
         for (String patchPath : patchPaths) {
             context.log("Executing patch '{0}'", patchPath);
 
-            PatchResult patchResult = patchSystemService.runPatch(patchPath);
+            GroovyPatchResult patchResult = groovyPatchSystemService.runPatch(patchPath);
 
             context.incrementProgressCount(progressCounter++);
             context.log("Executed patch '{0}' - RESULT '{1}' - RUNNING TIME '{2}'", patchPath, patchResult.getStatus(), patchResult.getRunningTime());

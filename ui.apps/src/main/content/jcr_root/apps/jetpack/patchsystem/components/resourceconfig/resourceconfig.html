@@ -26,6 +26,7 @@
 
     <td class="foundation-collection-item-dateExecuted" is="coral-table-cell">
         <span class="date">${model.dateExecuted}</span>
+        <span data-sly-test="${model.runningTime}" class="runningTime">Duration: ${model.runningTime}</span>
     </td>
     <td class="foundation-collection-item-showOutput" is="coral-table-cell">
         <a class="foundation-collection-item-showOutput__link" data-script="${model.script}" data-sly-test="${model.output}" href="#">Result</a>

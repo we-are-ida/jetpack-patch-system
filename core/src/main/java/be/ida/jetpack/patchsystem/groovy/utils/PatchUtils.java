@@ -1,7 +1,7 @@
-package be.ida.jetpack.patchsystem.utils;
+package be.ida.jetpack.patchsystem.groovy.utils;
 
-import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.PatchResult;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class PatchUtils {
@@ -14,7 +14,7 @@ public abstract class PatchUtils {
      * @param patchResult Patch result to compare
      * @return true in case a difference is found and the groovy file was updated.
      */
-    public static boolean isDiff(PatchFile patchFile, PatchResult patchResult) {
+    public static boolean isDiff(GroovyPatchFile patchFile, GroovyPatchResult patchResult) {
         return patchResult != null && StringUtils.isNotBlank(patchResult.getMd5()) && !patchFile.getMd5().equals(patchResult.getMd5());
     }
 }

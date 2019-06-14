@@ -74,7 +74,7 @@
                         sortable="{Boolean}false"/>
                     <dateExecuted
                         jcr:primaryType="nt:unstructured"
-                        jcr:title="Date Executed"
+                        jcr:title="Date Executed / Duration"
                         class="dateExecuted"
                         sortable="{Boolean}false"/>
                 </columns>
