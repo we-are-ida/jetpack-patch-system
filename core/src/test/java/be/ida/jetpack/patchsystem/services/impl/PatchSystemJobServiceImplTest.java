@@ -82,7 +82,7 @@ public class PatchSystemJobServiceImplTest {
         given(jobManager.addJob("be/ida/jetpack/patch", properties)).willReturn(mock(Job.class));
 
         //test
-        boolean status = patchSystemJobService.executePatch("/apps/patches/1.groovy");
+        boolean status = patchSystemJobService.executePatch("/apps/patches/1.groovy", "bla", true);
 
         //check
         assertThat(status).isTrue();

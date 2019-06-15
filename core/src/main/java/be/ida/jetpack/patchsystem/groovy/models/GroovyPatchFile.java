@@ -20,7 +20,7 @@ public class GroovyPatchFile implements PatchFile {
     private String fileContent;
     private String md5;
 
-    private PatchFolder parentFolder;
+    private GroovyPatchFolder parentFolder;
 
     @PostConstruct
     private void init() {
@@ -60,7 +60,7 @@ public class GroovyPatchFile implements PatchFile {
         return path;
     }
 
-    public void setParentFolder(PatchFolder parentFolder) {
+    public void setParentFolder(GroovyPatchFolder parentFolder) {
         this.parentFolder = parentFolder;
     }
 
@@ -72,5 +72,15 @@ public class GroovyPatchFile implements PatchFile {
         }
         sb.append(this.scriptName);
         return sb.toString();
+    }
+
+    @Override
+    public boolean isRunnable() {
+        return true;
+    }
+
+    @Override
+    public String getType() {
+        return "groovy";
     }
 }

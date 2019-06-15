@@ -1,13 +1,14 @@
 package be.ida.jetpack.patchsystem.ondeploytest;
 
-import com.adobe.acs.commons.ondeploy.scripts.OnDeployScriptBase;
+import be.ida.jetpack.patchsystem.ondeploy.models.OnDeployScriptPatch;
 
 /**
  * @author michael
  * @since 2019-06-12
  */
-public class TestOnDeployScript extends OnDeployScriptBase {
+public class TestOnDeployScript extends OnDeployScriptPatch {
 
+    @Override
     public String name() {
         return "This is my test script";
     }

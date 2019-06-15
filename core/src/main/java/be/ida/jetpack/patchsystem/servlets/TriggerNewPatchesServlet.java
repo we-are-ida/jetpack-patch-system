@@ -1,6 +1,7 @@
 package be.ida.jetpack.patchsystem.servlets;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
+import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import be.ida.jetpack.patchsystem.servlets.responsemodels.TriggerResponse;
 import com.google.gson.Gson;
@@ -38,6 +39,9 @@ public class TriggerNewPatchesServlet extends SlingAllMethodsServlet {
     @Reference
     private PatchSystemJobService patchSystemJobService;
 
+    @Reference
+    private OnDeployScriptSystemService onDeployScriptSystemService;
+
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) {
         try {
@@ -62,15 +66,21 @@ public class TriggerNewPatchesServlet extends SlingAllMethodsServlet {
 
         TriggerResponse triggerResponse = new TriggerResponse();
         if (patches == null) {
-            triggerResponse.setMessage("Could not trigger patches");
+            triggerResponse.setMessage("Could not trigger patches.");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } else if (CollectionUtils.isEmpty(patches)) {
-            triggerResponse.setMessage("No patches found to trigger");
+            triggerResponse.setMessage("No patches found to trigger.");
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
-            triggerResponse.setMessage("Success");
+            triggerResponse.setMessage("Success.");
             triggerResponse.setPatches(patches);
             response.setStatus(HttpServletResponse.SC_OK);
+        }
+
+        if (onDeployScriptSystemService.isPatchSystemReady()) {
+            String message = triggerResponse.getMessage();
+            triggerResponse.setMessage(message
+                    + " On Deploy Scripts cannot be triggered using the Patch System.");
         }
 
         Gson gson = new Gson();

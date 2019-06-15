@@ -14,4 +14,8 @@ public interface PatchFile {
 
     String getPath();
 
+    boolean isRunnable();
+
+    String getType();
+
 }

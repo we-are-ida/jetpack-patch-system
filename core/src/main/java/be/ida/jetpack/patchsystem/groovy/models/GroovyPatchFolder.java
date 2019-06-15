@@ -9,7 +9,7 @@ import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 import javax.annotation.PostConstruct;
 
 @Model(adaptables = Resource.class)
-public class PatchFolder {
+public class GroovyPatchFolder {
 
     @Self
     private Resource resource;
@@ -19,7 +19,7 @@ public class PatchFolder {
 
     private String folderName;
 
-    private PatchFolder parent;
+    private GroovyPatchFolder parent;
 
     @PostConstruct
     private void init() {
@@ -37,7 +37,7 @@ public class PatchFolder {
         return projectName;
     }
 
-    public void setParent(PatchFolder parent) {
+    public void setParent(GroovyPatchFolder parent) {
         this.parent = parent;
     }
 

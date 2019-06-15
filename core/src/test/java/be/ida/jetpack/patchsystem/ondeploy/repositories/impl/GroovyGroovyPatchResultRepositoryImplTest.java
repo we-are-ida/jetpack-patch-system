@@ -4,7 +4,7 @@ import be.ida.jetpack.carve.manager.ModelManager;
 import be.ida.jetpack.carve.manager.exception.ModelManagerException;
 import be.ida.jetpack.patchsystem.groovy.repositories.impl.GroovyPatchResultRepositoryImpl;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
-import be.ida.jetpack.patchsystem.groovy.models.PatchFolder;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import org.apache.sling.api.resource.Resource;
@@ -38,7 +38,7 @@ public class GroovyGroovyPatchResultRepositoryImplTest {
     @Before
     public void setUp() {
         context.load().json("/mocks/patches.json", "/apps/patches");
-        context.addModelsForClasses(GroovyPatchFile.class, PatchFolder.class);
+        context.addModelsForClasses(GroovyPatchFile.class, GroovyPatchFolder.class);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class GroovyGroovyPatchResultRepositoryImplTest {
         GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
@@ -65,10 +65,10 @@ public class GroovyGroovyPatchResultRepositoryImplTest {
         GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-B");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         Resource subFolderResource = context.resourceResolver().getResource("/apps/patches/project-B/sub-project-B");
-        PatchFolder subPatchFolder = subFolderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder subPatchFolder = subFolderResource.adaptTo(GroovyPatchFolder.class);
 
         subPatchFolder.setParent(patchFolder);
         patchFile.setParentFolder(subPatchFolder);
@@ -136,10 +136,10 @@ public class GroovyGroovyPatchResultRepositoryImplTest {
         GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-B");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         Resource subFolderResource = context.resourceResolver().getResource("/apps/patches/project-B/sub-project-B");
-        PatchFolder subPatchFolder = subFolderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder subPatchFolder = subFolderResource.adaptTo(GroovyPatchFolder.class);
 
         subPatchFolder.setParent(patchFolder);
         patchFile.setParentFolder(subPatchFolder);

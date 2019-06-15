@@ -43,8 +43,11 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
-    public boolean executePatch(String patchPath) {
-        return executePatches(Collections.singletonList(patchPath));
+    public boolean executePatch(String patchPath, String type, boolean runnable) {
+        if (runnable) {
+            return executePatches(Collections.singletonList(patchPath));
+        }
+        return false;
     }
 
     @Override

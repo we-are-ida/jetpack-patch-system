@@ -2,7 +2,7 @@ package be.ida.jetpack.patchsystem.ondeploy.repositories.impl;
 
 import be.ida.jetpack.patchsystem.groovy.repositories.impl.GroovyPatchFileRepositoryImpl;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
-import be.ida.jetpack.patchsystem.groovy.models.PatchFolder;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import org.apache.sling.api.resource.Resource;
@@ -25,7 +25,7 @@ public class GroovyGroovyPatchFileRepositoryImplTest {
     @Before
     public void setUp() {
         context.load().json("/mocks/patches.json", "/apps/patches");
-        context.addModelsForClasses(GroovyPatchFile.class, PatchFolder.class);
+        context.addModelsForClasses(GroovyPatchFile.class, GroovyPatchFolder.class);
         context.registerInjectActivateService(new GroovyPatchFileRepositoryImpl());
     }
 

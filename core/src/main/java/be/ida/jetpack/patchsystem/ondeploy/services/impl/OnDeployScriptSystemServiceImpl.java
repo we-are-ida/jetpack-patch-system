@@ -1,14 +1,13 @@
 package be.ida.jetpack.patchsystem.ondeploy.services.impl;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.groovy.models.PatchFileWithResultResource;
+import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
 import be.ida.jetpack.patchsystem.models.*;
 import be.ida.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile;
 import be.ida.jetpack.patchsystem.ondeploy.models.OnDeployPatchResult;
 import be.ida.jetpack.patchsystem.ondeploy.repositories.OnDeployScriptsResultRepository;
 import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import com.adobe.acs.commons.ondeploy.OnDeployScriptProvider;
-import com.adobe.acs.commons.ondeploy.impl.OnDeployExecutor;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.framework.Constants;

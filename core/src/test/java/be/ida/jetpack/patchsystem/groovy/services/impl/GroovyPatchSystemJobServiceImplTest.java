@@ -1,10 +1,9 @@
 package be.ida.jetpack.patchsystem.groovy.services.impl;
 
-import be.ida.jetpack.patchsystem.groovy.services.impl.GroovyPatchSystemServiceImpl;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.groovy.models.PatchFileWithResultResource;
+import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchResultRepository;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;
 import com.icfolson.aem.groovy.console.GroovyConsoleService;

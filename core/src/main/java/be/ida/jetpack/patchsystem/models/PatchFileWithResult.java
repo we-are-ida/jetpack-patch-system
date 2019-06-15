@@ -27,6 +27,12 @@ public class PatchFileWithResult {
     @ValueMapValue(name="scriptName")
     private String script;
 
+    @ValueMapValue(name="type")
+    private String type;
+
+    @ValueMapValue(name="runnable")
+    private boolean runnable;
+
     @ValueMapValue(name="status", optional = true)
     private String status;
 
@@ -121,5 +127,13 @@ public class PatchFileWithResult {
 
     public String getRunningTime() {
         return runningTime;
+    }
+
+    public boolean isRunnable() {
+        return runnable;
+    }
+
+    public String getType() {
+        return type;
     }
 }

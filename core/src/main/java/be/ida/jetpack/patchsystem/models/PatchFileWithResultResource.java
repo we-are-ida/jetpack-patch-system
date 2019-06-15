@@ -1,7 +1,5 @@
-package be.ida.jetpack.patchsystem.groovy.models;
+package be.ida.jetpack.patchsystem.models;
 
-import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.PatchResult;
 import com.adobe.cq.commerce.common.ValueMapDecorator;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.SyntheticResource;
@@ -48,6 +46,8 @@ public class PatchFileWithResultResource extends SyntheticResource {
     private Map<String, Object> createPropertiesMap() {
         Map<String, Object> properties = new HashMap<>();
 
+        properties.put("type", patchFile.getType());
+        properties.put("runnable", patchFile.isRunnable());
         properties.put("projectName", patchFile.getProjectName());
         properties.put("scriptName", patchFile.getScriptName());
 

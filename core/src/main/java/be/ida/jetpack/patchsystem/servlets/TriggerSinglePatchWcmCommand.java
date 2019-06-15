@@ -42,11 +42,19 @@ public class TriggerSinglePatchWcmCommand implements WCMCommand {
                                        PageManager pageManager) {
 
         RequestParameter path = slingHttpServletRequest.getRequestParameter(PATH_PARAM);
+        RequestParameter type = slingHttpServletRequest.getRequestParameter("type");
+        RequestParameter runnable = slingHttpServletRequest.getRequestParameter("runnable");
+
+
+
+        boolean runEnabled = false;
+        if (runnable != null && "yes".equals(runnable.getString())) {
+            runEnabled = true;
+        }
 
         HtmlResponse resp = null;
-
         try {
-            boolean success = patchSystemJobService.executePatch(path.getString());
+            boolean success = patchSystemJobService.executePatch(path.getString(), type.getString(), runEnabled);
 
             resp = HtmlStatusResponseHelper.createStatusResponse(success, "executed",
                     path.getString());

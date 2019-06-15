@@ -61,7 +61,7 @@
         };
     }
 
-    function runGroovyScripts(paths, projects, scripts) {
+    function runGroovyScripts(paths, projects, scripts, types, runnables) {
 
         var tickerMessage = $(document.createElement("div"));
 
@@ -69,7 +69,7 @@
 
         // creates an anonymous function that executes a run request for the specified path
         // and returns a promise that resolves after the call has completed (successfully or not)
-        function createRunRequest(path, project, script) {
+        function createRunRequest(path, project, script, type) {
             return function () {
 
                 wt.updateMessage(tickerMessage.html()
@@ -82,12 +82,14 @@
                     data: {
                         _charset_: "UTF-8",
                         cmd: "triggerSinglePatch",
-                        path: path
+                        path: path,
+                        type: type,
+                        runnable: runnable
                     }
                 }).fail(function() {
                     //console.error("Failed to run", path);
                     $(document.createElement("div"))
-                        .html(project+": "+ script + "&nbsp;&nbsp; <b class='groovy-run--failed'>Triggered failed</b>")
+                        .html(project+": "+ script + "&nbsp;&nbsp; <b class='groovy-run--failed'>Trigger failed</b>")
                         .appendTo(tickerMessage);
                 }).done(function() {
                     //console.log("Ran successfully", path);
@@ -114,7 +116,9 @@
             var path = paths[i];
             var project = projects[i];
             var script = scripts[i];
-            requests = requests.then(createRunRequest(path, project, script));
+            var type = types[i];
+            var runnable = runnables[i];
+            requests = requests.then(createRunRequest(path, project, script, type, runnable));
         }
 
         // hide spinner and reload page after all requests have been executed
@@ -138,7 +142,7 @@
             if (selections.length === 1) {
                 intro.text(Granite.I18n.get("You are going to run the following Groovy script:"));
             } else {
-                intro.text(Granite.I18n.get("You are going to run the following {0} Groovy scripts                                                                                                                :", selections.length));
+                intro.text(Granite.I18n.get("You are going to run the following {0} Groovy scripts:", selections.length));
             }
 
             var list = [];
@@ -171,7 +175,15 @@
                         return $(v).data("script");
                     });
 
-                    runGroovyScripts(paths, projects, scripts);
+                    var types = selections.map(function(v) {
+                        return $(v).data("type");
+                    });
+
+                    var runnables = selections.map(function(v) {
+                        return $(v).data("runnable");
+                    });
+
+                    runGroovyScripts(paths, projects, scripts, types, runnables);
                 }
             }]);
         }

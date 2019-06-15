@@ -3,7 +3,7 @@ package be.ida.jetpack.patchsystem.groovy.services.impl;
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
-import be.ida.jetpack.patchsystem.groovy.models.PatchFileWithResultResource;
+import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
 import be.ida.jetpack.patchsystem.groovy.utils.PatchUtils;
 import be.ida.jetpack.patchsystem.models.*;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchResultRepository;

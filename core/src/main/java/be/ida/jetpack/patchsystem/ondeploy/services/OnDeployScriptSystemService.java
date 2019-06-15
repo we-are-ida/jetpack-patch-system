@@ -1,6 +1,6 @@
 package be.ida.jetpack.patchsystem.ondeploy.services;
 
-import be.ida.jetpack.patchsystem.groovy.models.PatchFileWithResultResource;
+import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import java.util.List;

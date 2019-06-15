@@ -51,8 +51,6 @@ public class GroovyPatchResult implements PatchResult {
         this.id = id;
         this.status = status;
         this.startDate = startDate;
-
-        initModel();
     }
 
     @PostConstruct

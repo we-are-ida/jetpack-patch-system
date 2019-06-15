@@ -1,7 +1,7 @@
 package be.ida.jetpack.patchsystem.groovy.repositories.impl;
 
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
-import be.ida.jetpack.patchsystem.groovy.models.PatchFolder;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;
 import com.day.crx.JcrConstants;
 import org.apache.sling.api.resource.LoginException;
@@ -42,7 +42,7 @@ public class GroovyPatchFileRepositoryImpl implements GroovyPatchFileRepository 
             if (resource != null) {
                 patchFile = resource.adaptTo(GroovyPatchFile.class);
                 if (patchFile != null) {
-                    PatchFolder patchFolder = getPatchFolder(resource.getParent());
+                    GroovyPatchFolder patchFolder = getPatchFolder(resource.getParent());
                     if (patchFolder != null) {
                         patchFile.setParentFolder(patchFolder);
                     }
@@ -55,15 +55,15 @@ public class GroovyPatchFileRepositoryImpl implements GroovyPatchFileRepository 
         return patchFile;
     }
 
-    private PatchFolder getPatchFolder(Resource resource) {
-        PatchFolder patchFolder = resource.adaptTo(PatchFolder.class);
+    private GroovyPatchFolder getPatchFolder(Resource resource) {
+        GroovyPatchFolder patchFolder = resource.adaptTo(GroovyPatchFolder.class);
 
         if (resource.getPath().equals(ROOT)) {
             return null;
         }
 
         if (resource.getParent() != null && !resource.getParent().getPath().equals(ROOT)) {
-            PatchFolder parentPatchFolder = getPatchFolder(resource.getParent());
+            GroovyPatchFolder parentPatchFolder = getPatchFolder(resource.getParent());
             if (parentPatchFolder != null) {
                 patchFolder.setParent(parentPatchFolder);
             }
@@ -87,7 +87,7 @@ public class GroovyPatchFileRepositoryImpl implements GroovyPatchFileRepository 
         return patches;
     }
 
-    private List<GroovyPatchFile> scanFolderForPatches(Resource resource, PatchFolder parent) {
+    private List<GroovyPatchFile> scanFolderForPatches(Resource resource, GroovyPatchFolder parent) {
         List<GroovyPatchFile> patchFiles = new ArrayList<>();
 
         Iterable<Resource> subResources = resource.getChildren();
@@ -95,7 +95,7 @@ public class GroovyPatchFileRepositoryImpl implements GroovyPatchFileRepository 
             if (subResource.getResourceType().equals(JcrConstants.NT_FOLDER)
                     || subResource.getResourceType().equals("sling:Folder")
                     || subResource.getResourceType().equals("sling:OrderedFolder")) {
-                PatchFolder patchFolder = subResource.adaptTo(PatchFolder.class);
+                GroovyPatchFolder patchFolder = subResource.adaptTo(GroovyPatchFolder.class);
                 if (patchFolder != null) {
                     patchFolder.setParent(parent);
                     patchFiles.addAll(scanFolderForPatches(subResource, patchFolder));

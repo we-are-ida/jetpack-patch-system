@@ -21,7 +21,7 @@
 
     function showResults(result) {
         if (typeof result.patches === "undefined") {
-            ui.alert("No new patches", "No patches found that need to be executed.", "info");
+            ui.alert("No new patches", result.message, "info");
             return;
         }
 

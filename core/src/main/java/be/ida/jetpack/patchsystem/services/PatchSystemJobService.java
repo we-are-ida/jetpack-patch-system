@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PatchSystemJobService {
 
-    boolean executePatch(String patchPath);
+    boolean executePatch(String patchPath, String type, boolean runnable);
 
     boolean executePatches(List<String> patchPaths);
 

@@ -39,7 +39,7 @@ public class TriggerSinglePatchWcmCommandTest {
         SlingHttpServletRequest slingHttpServletRequest = mock(SlingHttpServletRequest.class);
         given(slingHttpServletRequest.getRequestParameter("path")).willReturn(requestParameter);
 
-        given(patchSystemJobService.executePatch("/apps/script/script.groovy")).willReturn(true);
+        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla", true)).willReturn(true);
 
         HtmlResponse htmlResponse = command.performCommand(mock(WCMCommandContext.class),
                 slingHttpServletRequest,
@@ -59,7 +59,7 @@ public class TriggerSinglePatchWcmCommandTest {
         SlingHttpServletRequest slingHttpServletRequest = mock(SlingHttpServletRequest.class);
         given(slingHttpServletRequest.getRequestParameter("path")).willReturn(requestParameter);
 
-        given(patchSystemJobService.executePatch("/apps/script/script.groovy")).willReturn(false);
+        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla", true)).willReturn(false);
 
 
         HtmlResponse htmlResponse = command.performCommand(mock(WCMCommandContext.class),
@@ -80,8 +80,7 @@ public class TriggerSinglePatchWcmCommandTest {
         SlingHttpServletRequest slingHttpServletRequest = mock(SlingHttpServletRequest.class);
         given(slingHttpServletRequest.getRequestParameter("path")).willReturn(requestParameter);
 
-        given(patchSystemJobService.executePatch("/apps/script/script.groovy")).willThrow(new NullPointerException("message"));
-
+        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla", true)).willThrow(new NullPointerException("message"));
 
         HtmlResponse htmlResponse = command.performCommand(mock(WCMCommandContext.class),
                 slingHttpServletRequest,

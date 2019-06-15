@@ -1,6 +1,6 @@
 package be.ida.jetpack.patchsystem.services.impl;
 
-import be.ida.jetpack.patchsystem.groovy.models.PatchFileWithResultResource;
+import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
 import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemDataSourceService;
 import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
