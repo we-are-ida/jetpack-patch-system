@@ -6,6 +6,7 @@ import be.ida.jetpack.patchsystem.models.PatchFile;
 import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchResultRepository;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;
+import be.ida.jetpack.patchsystem.models.PatchStatus;
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -99,8 +100,9 @@ public class GroovyPatchSystemJobServiceImplTest {
 
         //check
         assertThat(patchFilesToExecute).isNotEmpty();
-        assertThat(patchFilesToExecute.size()).isEqualTo(1);
-        //TODO: assertThat(patchFilesToExecute.get(0).getMd5()).isEqualTo("999");
+        assertThat(patchFilesToExecute).hasSize(1);
+        assertThat(patchFilesToExecute.get(0)).isInstanceOf(GroovyPatchFile.class);
+        assertThat(((GroovyPatchFile)patchFilesToExecute.get(0)).getMd5()).isEqualTo("999");
     }
 
     @Test
@@ -128,7 +130,8 @@ public class GroovyPatchSystemJobServiceImplTest {
         //check
         assertThat(patchFilesToExecute).isNotEmpty();
         assertThat(patchFilesToExecute.size()).isEqualTo(1);
-        //TODO assertThat(patchFilesToExecute.get(0).getMd5()).isEqualTo("200");
+        assertThat(patchFilesToExecute.get(0)).isInstanceOf(GroovyPatchFile.class);
+        assertThat(((GroovyPatchFile)patchFilesToExecute.get(0)).getMd5()).isEqualTo("200");
     }
 
     @Test
@@ -138,6 +141,9 @@ public class GroovyPatchSystemJobServiceImplTest {
         given(patchFile1.getMd5()).willReturn("100");
         given(patchFile1.getScriptName()).willReturn("Script 1.groovy");
         given(patchFile1.getProjectName()).willReturn("Project A");
+        given(patchFile1.isRunnable()).willReturn(true);
+        given(patchFile1.getType()).willReturn("groovy");
+
         GroovyPatchFile patchFile2 = mock(GroovyPatchFile.class);
         given(patchFile2.getMd5()).willReturn("200");
         given(patchFile2.getScriptName()).willReturn("Script 2.groovy");
@@ -164,19 +170,21 @@ public class GroovyPatchSystemJobServiceImplTest {
         assertThat(patches.size()).isEqualTo(3);
 
         //patch 0 = already executed
-        assertThat(patches.get(0).getValueMap()).hasSize(7);
+        assertThat(patches.get(0).getValueMap()).hasSize(9);
         assertThat(patches.get(0).getValueMap().get("status")).isEqualTo("SUCCESS");
         assertThat(patches.get(0).getValueMap().get("projectName")).isEqualTo("Project A");
         assertThat(patches.get(0).getValueMap().get("scriptName")).isEqualTo("Script 1.groovy");
+        assertThat(patches.get(0).getValueMap().get("runnable")).isEqualTo(Boolean.TRUE);
+        assertThat(patches.get(0).getValueMap().get("type")).isEqualTo("groovy");
 
         //patch 1 = already executed, but modified
-        assertThat(patches.get(1).getValueMap()).hasSize(7);
+        assertThat(patches.get(1).getValueMap()).hasSize(9);
         assertThat(patches.get(1).getValueMap().get("status")).isEqualTo("RE-RUN");
         assertThat(patches.get(1).getValueMap().get("projectName")).isEqualTo("Project B");
         assertThat(patches.get(1).getValueMap().get("scriptName")).isEqualTo("Script 2.groovy");
 
         //patch 2 = new script
-        assertThat(patches.get(2).getValueMap()).hasSize(3);
+        assertThat(patches.get(2).getValueMap()).hasSize(5);
         assertThat(patches.get(2).getValueMap().get("status")).isEqualTo("NEW");
         assertThat(patches.get(2).getValueMap().get("projectName")).isEqualTo("Project C");
         assertThat(patches.get(2).getValueMap().get("scriptName")).isEqualTo("Script 3.groovy");
@@ -189,7 +197,7 @@ public class GroovyPatchSystemJobServiceImplTest {
         given(patchFile.getPath()).willReturn("/etc/patch/patchfile.groovy");
 
         given(patchFileRepository.getPatch("/etc/patch/patchfile.groovy")).willReturn(patchFile);
-        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), PatchStatus.RUNNING, Calendar.getInstance());
         patchResult.setMd5(patchFile.getMd5());
 
         given(patchResultRepository.createResult(patchFile)).willReturn(patchResult);
@@ -215,7 +223,7 @@ public class GroovyPatchSystemJobServiceImplTest {
         given(patchFile.getMd5()).willReturn("100");
 
         given(patchFileRepository.getPatch("/etc/patch/patchfile.groovy")).willReturn(patchFile);
-        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), PatchStatus.RUNNING, Calendar.getInstance());
         patchResult.setMd5(patchFile.getMd5());
 
         given(patchResultRepository.createResult(patchFile)).willReturn(patchResult);
@@ -240,7 +248,7 @@ public class GroovyPatchSystemJobServiceImplTest {
         given(patchFile.getPath()).willReturn("/etc/patch/patchfile.groovy");
 
         given(patchFileRepository.getPatch("/etc/patch/patchfile.groovy")).willReturn(patchFile);
-        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), PatchStatus.RUNNING, Calendar.getInstance());
         patchResult.setMd5(patchFile.getMd5());
 
         given(patchResultRepository.createResult(patchFile)).willReturn(patchResult);
@@ -267,7 +275,7 @@ public class GroovyPatchSystemJobServiceImplTest {
         given(patchFile.getPath()).willReturn("/etc/patch/patchfile.groovy");
 
         given(patchFileRepository.getPatch("/etc/patch/patchfile.groovy")).willReturn(patchFile);
-        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), PatchStatus.RUNNING, Calendar.getInstance());
         patchResult.setMd5(patchFile.getMd5());
 
         given(patchResultRepository.createResult(patchFile)).willReturn(patchResult);
@@ -283,13 +291,13 @@ public class GroovyPatchSystemJobServiceImplTest {
         assertThat(patchResultReturned).isNotNull();
         assertThat(patchResultReturned.getStatus()).isEqualTo("ERROR");
         assertThat(patchResultReturned.getOutput()).isEqualTo("Script Execution error, check log files");
-        assertThat(patchResultReturned.getRunningTime()).isNull();
+        assertThat(patchResultReturned.getRunningTime()).isNotBlank();
     }
 
     private static GroovyPatchResult createPatchResult(String id, String md5) {
-        GroovyPatchResult patchResult = new GroovyPatchResult(id, "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult(id, PatchStatus.RUNNING, Calendar.getInstance());
         patchResult.setMd5(md5);
-        patchResult.setStatus("SUCCESS");
+        patchResult.setStatus(PatchStatus.SUCCESS);
         patchResult.setEndDate(Calendar.getInstance());
         patchResult.setRunningTime("2000");
         patchResult.setOutput("output");

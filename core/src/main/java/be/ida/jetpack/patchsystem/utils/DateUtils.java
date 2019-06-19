@@ -1,5 +1,8 @@
 package be.ida.jetpack.patchsystem.utils;
 
+import be.ida.jetpack.patchsystem.models.PatchResult;
+import be.ida.jetpack.patchsystem.models.PatchStatus;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,7 +15,15 @@ import java.util.TimeZone;
  */
 public class DateUtils {
 
-    public static String formattedRunningTime(Calendar startDate, Calendar endDate) {
+    public static String formattedRunningTime(PatchResult patchResult) {
+
+        Calendar startDate = patchResult.getStartDate();
+        Calendar endDate = patchResult.getEndDate();
+
+        if (PatchStatus.RUNNING.isOfStatus(patchResult) && endDate == null) {
+            endDate = Calendar.getInstance();
+        }
+
         if (startDate != null && endDate != null) {
             long end = endDate.getTimeInMillis();
             long start = startDate.getTimeInMillis();

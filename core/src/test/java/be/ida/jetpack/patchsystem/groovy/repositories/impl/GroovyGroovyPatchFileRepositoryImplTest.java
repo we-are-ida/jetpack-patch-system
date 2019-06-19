@@ -1,6 +1,5 @@
-package be.ida.jetpack.patchsystem.ondeploy.repositories.impl;
+package be.ida.jetpack.patchsystem.groovy.repositories.impl;
 
-import be.ida.jetpack.patchsystem.groovy.repositories.impl.GroovyPatchFileRepositoryImpl;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;

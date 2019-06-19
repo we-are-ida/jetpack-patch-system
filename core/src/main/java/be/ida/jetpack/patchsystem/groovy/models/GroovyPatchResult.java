@@ -4,6 +4,7 @@ import be.ida.jetpack.carve.annotations.CarveId;
 import be.ida.jetpack.carve.annotations.CarveModel;
 import be.ida.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
 import be.ida.jetpack.patchsystem.models.PatchResult;
+import be.ida.jetpack.patchsystem.models.PatchStatus;
 import be.ida.jetpack.patchsystem.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
@@ -47,16 +48,18 @@ public class GroovyPatchResult implements PatchResult {
     public GroovyPatchResult() {
     }
 
-    public GroovyPatchResult(String id, String status, Calendar startDate) {
+    public GroovyPatchResult(String id, PatchStatus status, Calendar startDate) {
         this.id = id;
-        this.status = status;
+        this.status = status.displayName();
         this.startDate = startDate;
+
+        initModel();
     }
 
     @PostConstruct
     protected void initModel() {
         if (StringUtils.isBlank(this.runningTime)) {
-            this.runningTime = DateUtils.formattedRunningTime(startDate, endDate);
+            this.runningTime = DateUtils.formattedRunningTime(this);
         }
     }
 
@@ -88,6 +91,10 @@ public class GroovyPatchResult implements PatchResult {
         return runningTime;
     }
 
+    public void setStatus(PatchStatus status) {
+        this.status = status.displayName();
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -110,6 +117,6 @@ public class GroovyPatchResult implements PatchResult {
 
     @Override
     public boolean isError() {
-        return getStatus().equals("ERROR");
+        return PatchStatus.ERROR.isOfStatus(this);
     }
 }

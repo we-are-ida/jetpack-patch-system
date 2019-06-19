@@ -51,7 +51,7 @@ public class OnDeployPatchResult implements PatchResult {
         }
         this.status = status.toUpperCase();
 
-        this.runningTime = DateUtils.formattedRunningTime(startDate, endDate);
+        this.runningTime = DateUtils.formattedRunningTime(this);
     }
 
     public String getId() {

@@ -1,11 +1,11 @@
-package be.ida.jetpack.patchsystem.ondeploy.repositories.impl;
+package be.ida.jetpack.patchsystem.groovy.repositories.impl;
 
 import be.ida.jetpack.carve.manager.ModelManager;
 import be.ida.jetpack.carve.manager.exception.ModelManagerException;
-import be.ida.jetpack.patchsystem.groovy.repositories.impl.GroovyPatchResultRepositoryImpl;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
+import be.ida.jetpack.patchsystem.models.PatchStatus;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import org.apache.sling.api.resource.Resource;
 import org.junit.Before;
@@ -153,7 +153,7 @@ public class GroovyGroovyPatchResultRepositoryImplTest {
 
     @Test
     public void testUpdatePatchResult() throws ModelManagerException {
-        GroovyPatchResult patchResult = new GroovyPatchResult("100", "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult("100", PatchStatus.RUNNING, Calendar.getInstance());
 
         modelManager.persist(patchResult);
 
@@ -163,7 +163,7 @@ public class GroovyGroovyPatchResultRepositoryImplTest {
 
     @Test
     public void testUpdatePatchResult_exception() throws ModelManagerException {
-        GroovyPatchResult patchResult = new GroovyPatchResult("100", "RUNNING", Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult("100", PatchStatus.RUNNING, Calendar.getInstance());
 
         willThrow(new ModelManagerException("message")).given(modelManager).persist(patchResult);
 

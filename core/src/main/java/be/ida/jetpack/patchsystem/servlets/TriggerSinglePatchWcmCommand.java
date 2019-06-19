@@ -45,8 +45,6 @@ public class TriggerSinglePatchWcmCommand implements WCMCommand {
         RequestParameter type = slingHttpServletRequest.getRequestParameter("type");
         RequestParameter runnable = slingHttpServletRequest.getRequestParameter("runnable");
 
-
-
         boolean runEnabled = false;
         if (runnable != null && "yes".equals(runnable.getString())) {
             runEnabled = true;

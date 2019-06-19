@@ -17,7 +17,7 @@ import java.util.Calendar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GroovyPatchFileWithResultTest {
+public class PatchFileWithResultResourceTest {
 
     @Rule
     public final AemContext context = new AemContext();
@@ -40,7 +40,7 @@ public class GroovyPatchFileWithResultTest {
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        GroovyPatchResult patchResult = new GroovyPatchResult("1000", "RUNNING", calendar);
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
 
         PatchFileWithResultResource patchFileWithResultResource = new PatchFileWithResultResource(context.resourceResolver(),
                 patchFile, patchResult, false);
@@ -76,8 +76,8 @@ public class GroovyPatchFileWithResultTest {
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        GroovyPatchResult patchResult = new GroovyPatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("SUCCESS");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.SUCCESS);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");
@@ -107,8 +107,8 @@ public class GroovyPatchFileWithResultTest {
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        GroovyPatchResult patchResult = new GroovyPatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("ERROR");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.ERROR);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");
@@ -138,8 +138,8 @@ public class GroovyPatchFileWithResultTest {
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        GroovyPatchResult patchResult = new GroovyPatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("SUCCESS");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.SUCCESS);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");
@@ -171,7 +171,7 @@ public class GroovyPatchFileWithResultTest {
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        GroovyPatchResult patchResult = new GroovyPatchResult("1000", "RUNNING", calendar);
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
         patchResult.setStatus("OTHER");
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
@@ -214,7 +214,7 @@ public class GroovyPatchFileWithResultTest {
         assertThat(patchFileWithResult.getStatus()).isEqualTo("NEW");
         assertThat(patchFileWithResult.getOutput()).isNull();
         assertThat(patchFileWithResult.getRunningTime()).isNull();
-        assertThat(patchFileWithResult.getThumbnail()).isEqualTo("context/apps/jetpack/patchsystem/components/thumb.png");
+        assertThat(patchFileWithResult.getThumbnail()).isEqualTo("context/apps/jetpack/patchsystem/components/thumb-groovy.png");
         assertThat(patchFileWithResult.getDateExecuted()).isNull();
     }
 
@@ -229,8 +229,8 @@ public class GroovyPatchFileWithResultTest {
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        GroovyPatchResult patchResult = new GroovyPatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("ERROR");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.ERROR);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");

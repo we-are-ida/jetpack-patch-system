@@ -36,6 +36,9 @@ public class PatchFileWithResult {
     @ValueMapValue(name="status", optional = true)
     private String status;
 
+    @ValueMapValue(name="status", optional = true)
+    private PatchStatus status2;
+
     @ValueMapValue(name="startDate", optional = true)
     private Calendar startDate;
 
@@ -57,24 +60,10 @@ public class PatchFileWithResult {
         path = resource.getPath();
 
         if (StringUtils.isNotBlank(status)) {
-            switch (status){
-                case "ERROR":
-                    statusClass = "error";
-                    break;
-                case "SUCCESS":
-                    statusClass = "success";
-                    break;
-                case "RUNNING":
-                    statusClass = "warning";
-                    break;
-                case "RE-RUN":
-                    statusClass = "info";
-                    break;
-                case "NEW":
-                    statusClass = "new";
-                    break;
-                default:
-                    statusClass = "info";
+            statusClass = "info";
+            PatchStatus patchStatus = PatchStatus.getStatus(status);
+            if (patchStatus != null) {
+                statusClass = patchStatus.cssClass();
             }
         }
 
@@ -94,7 +83,10 @@ public class PatchFileWithResult {
     }
 
     private String getThumbnailUrl() {
-        return "/apps/jetpack/patchsystem/components/thumb.png";
+        if ("onDeployScript".equals(this.type)) {
+            return "/apps/jetpack/patchsystem/components/thumb-ondeployscript.png"  ;
+        }
+        return "/apps/jetpack/patchsystem/components/thumb-groovy.png";
     }
 
     public String getProject() {

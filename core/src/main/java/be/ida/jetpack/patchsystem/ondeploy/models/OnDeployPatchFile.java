@@ -12,11 +12,13 @@ public class OnDeployPatchFile implements PatchFile {
     private String path;
 
     public OnDeployPatchFile(OnDeployScript onDeployScript, OnDeployScriptProvider onDeployScriptProvider) {
-        this.path = onDeployScript.getClass().getName();
-        this.projectName = onDeployScriptProvider.getClass().getSimpleName();
+        if (onDeployScript != null) {
+            this.path = onDeployScript.getClass().getName();
+            this.projectName = onDeployScriptProvider.getClass().getSimpleName();
 
-        if (onDeployScript instanceof OnDeployScriptPatch) {
-            scriptTitle = ((OnDeployScriptPatch)onDeployScript).name();
+            if (onDeployScript instanceof OnDeployScriptPatch) {
+                scriptTitle = ((OnDeployScriptPatch) onDeployScript).name();
+            }
         }
 
         if (StringUtils.isBlank(scriptTitle)) {

@@ -40,9 +40,6 @@ public class GroovyPatchSystemServiceImpl implements GroovyPatchSystemService {
 
     private static final Logger LOG = LoggerFactory.getLogger(GroovyPatchSystemServiceImpl.class);
 
-    private static final String ERROR = "ERROR";
-    private static final String SUCCESS = "SUCCESS";
-
     private static final String DEFAULT_USER = "jetpack-patch-system";
     private static final String DEFAULT_SERVICE = "be.ida.jetpack.patch-system.core";
 
@@ -77,22 +74,22 @@ public class GroovyPatchSystemServiceImpl implements GroovyPatchSystemService {
 
                 //process response of script execution
                 if (StringUtils.isBlank(response.getExceptionStackTrace())) {
-                    patchResult.setStatus(SUCCESS);
+                    patchResult.setStatus(PatchStatus.SUCCESS);
                     if (StringUtils.isNotBlank(response.getOutput())) {
                         patchResult.setOutput(response.getOutput());
                     }
                 } else {
-                    patchResult.setStatus(ERROR);
+                    patchResult.setStatus(PatchStatus.ERROR);
                     patchResult.setOutput(response.getExceptionStackTrace());
                 }
             } else {
                 LOG.error("Groovy Console is not installed.");
-                patchResult.setStatus(ERROR);
+                patchResult.setStatus(PatchStatus.ERROR);
                 patchResult.setOutput("Groovy Console is not installed.");
             }
         } catch (Exception e) {
             LOG.error("Could not execute script", e);
-            patchResult.setStatus(ERROR);
+            patchResult.setStatus(PatchStatus.ERROR);
             patchResult.setOutput("Script Execution error, check log files");
         }
 

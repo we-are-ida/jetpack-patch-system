@@ -6,6 +6,7 @@ import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchResultRepository;
+import be.ida.jetpack.patchsystem.models.PatchStatus;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -23,8 +24,6 @@ import java.util.Calendar;
         })
 public class GroovyPatchResultRepositoryImpl implements GroovyPatchResultRepository {
     private final static Logger LOG = LoggerFactory.getLogger(GroovyPatchResultRepositoryImpl.class);
-
-    private static final String RUNNING = "RUNNING";
 
     @Reference
     private ModelManager modelManager; //Carve
@@ -44,7 +43,7 @@ public class GroovyPatchResultRepositoryImpl implements GroovyPatchResultReposit
 
     @Override
     public GroovyPatchResult createResult(GroovyPatchFile patchFile) {
-        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), RUNNING, Calendar.getInstance());
+        GroovyPatchResult patchResult = new GroovyPatchResult(patchFile.getResultPath(), PatchStatus.RUNNING, Calendar.getInstance());
         patchResult.setMd5(patchFile.getMd5());
 
         try {

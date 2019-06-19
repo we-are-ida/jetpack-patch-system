@@ -15,7 +15,9 @@ import org.osgi.service.component.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 @Component(
@@ -35,29 +37,36 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
     @Reference
     private OnDeployScriptsResultRepository patchResultRepository;
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
-    private volatile OnDeployScriptProvider onDeployScriptProvider;
+    private volatile List<OnDeployScriptProvider> onDeployScriptProvider = new CopyOnWriteArrayList<>();
 
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
 
     public List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver) {
-        return onDeployScriptProvider
-                .getScripts()
-                .stream()
-                .map(item -> new OnDeployPatchFile(item, onDeployScriptProvider))
-                .map(patchFile -> {
-                    OnDeployPatchResult patchResult = getMatchingPatchResult(patchFile);
-                    return new PatchFileWithResultResource(resourceResolver, patchFile, patchResult, false);
-                })
-                .collect(Collectors.toList());
+
+        List<PatchFileWithResultResource> patchFiles = new ArrayList<>();
+
+        onDeployScriptProvider
+            .forEach(provider -> {
+                patchFiles.addAll(provider.getScripts()
+                   .stream()
+                   .map(item -> new OnDeployPatchFile(item, provider))
+                   .map(patchFile -> {
+                       OnDeployPatchResult patchResult = getMatchingPatchResult(patchFile);
+                       return new PatchFileWithResultResource(resourceResolver, patchFile, patchResult, false);
+                   })
+                   .collect(Collectors.toList()));
+            });
+
+        return patchFiles;
     }
 
     @Override
     public boolean isPatchSystemReady() {
-        return onDeployScriptProvider != null;
+        return !onDeployScriptProvider.isEmpty();
     }
 
     /**
@@ -84,7 +93,7 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
         return patchResult == null || patchResult.isError();
     }
 
-    protected void unbindOnDeployScriptProvider() {
-        this.onDeployScriptProvider = null;
+    protected void unbindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
+        this.onDeployScriptProvider.remove(scriptProvider);
     }
 }
