@@ -7,6 +7,7 @@ import be.ida.jetpack.patchsystem.executors.JobResult;
 import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida.jetpack.patchsystem.models.PatchFile;
 import be.ida.jetpack.patchsystem.models.SimplePatchFile;
+import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.JobManager;
@@ -19,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -35,6 +37,9 @@ public class PatchSystemJobServiceImplTest {
 
     @Mock
     private GroovyPatchSystemService patchSystemService;
+
+    @Mock
+    private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Test
     public void testExecutePatches_empty() {
@@ -55,7 +60,7 @@ public class PatchSystemJobServiceImplTest {
         patchFiles.add(new SimplePatchFile("groovy", "/apps/script/1.groovy"));
         patchFiles.add(new SimplePatchFile("groovy", "/apps/script/2.groovy"));
 
-        List<String> patches = Arrays.asList("/apps/patches/1.groovy", "/apps/patches/2.groovy");
+        List<String> patches = Arrays.asList("/apps/script/1.groovy", "/apps/script/2.groovy");
         List<String> types = Arrays.asList("groovy", "groovy");
 
         Map<String, Object> properties = new HashMap<>();
@@ -78,7 +83,7 @@ public class PatchSystemJobServiceImplTest {
         patchFiles.add(new SimplePatchFile("groovy", "/apps/script/1.groovy"));
         patchFiles.add(new SimplePatchFile("groovy", "/apps/script/2.groovy"));
 
-        List<String> patches = Arrays.asList("/apps/patches/1.groovy", "/apps/patches/2.groovy");
+        List<String> patches = Arrays.asList("/apps/script/1.groovy", "/apps/script/2.groovy");
         List<String> types = Arrays.asList("groovy", "groovy");
 
         Map<String, Object> properties = new HashMap<>();
@@ -130,15 +135,15 @@ public class PatchSystemJobServiceImplTest {
         //given
         GroovyPatchFile patchFile1 = mock(GroovyPatchFile.class);
         given(patchFile1.getPath()).willReturn("/apps/patch/path1.groovy");
+        given(patchFile1.getType()).willReturn("groovy");
         GroovyPatchFile patchFile2 = mock(GroovyPatchFile.class);
         given(patchFile2.getPath()).willReturn("/apps/patch/path2.groovy");
+        given(patchFile2.getType()).willReturn("groovy");
         List<PatchFile> patchFiles = new ArrayList<>();
         patchFiles.add(patchFile1);
         patchFiles.add(patchFile2);
 
         given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
-
-        List<String> patches = Arrays.asList("/apps/patch/path1.groovy", "/apps/patch/path2.groovy");
 
         given(jobManager.addJob(eq("be/ida/jetpack/patch"), any())).willReturn(mock(Job.class));
 
@@ -147,8 +152,13 @@ public class PatchSystemJobServiceImplTest {
 
         //check
         assertThat(patchesReturned).isNotEmpty();
-        assertThat(patchesReturned.size()).isEqualTo(2);
-        assertThat(patchesReturned).isEqualTo(patches);
+        assertThat(patchesReturned).hasSize(2);
+        assertThat(patchesReturned)
+                .extracting("patchFile", "type")
+                .containsExactly(
+                        tuple("/apps/patch/path1.groovy", "groovy"),
+                        tuple("/apps/patch/path2.groovy", "groovy")
+                );
     }
 
     @Test
@@ -156,24 +166,31 @@ public class PatchSystemJobServiceImplTest {
         //given
         GroovyPatchFile patchFile1 = mock(GroovyPatchFile.class);
         given(patchFile1.getPath()).willReturn("/apps/patch/path1.groovy");
+        given(patchFile1.getType()).willReturn("groovy");
         GroovyPatchFile patchFile2 = mock(GroovyPatchFile.class);
         given(patchFile2.getPath()).willReturn("/apps/patch/path2.groovy");
+        given(patchFile2.getType()).willReturn("groovy");
         List<PatchFile> patchFiles = new ArrayList<>();
         patchFiles.add(patchFile1);
         patchFiles.add(patchFile2);
 
         given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
+        given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
 
         List<String> patches = Arrays.asList(new String[] {"/apps/patch/path1.groovy", "/apps/patch/path2.groovy"});
+        List<String> types = Arrays.asList(new String[] {"groovy", "groovy"});
 
-        Map<String, Object> properties = Collections.singletonMap(JetpackConstants.PATCH_PATHS, patches);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(JetpackConstants.PATCH_PATHS, patches);
+        properties.put(JetpackConstants.TYPES, types);
+
         given(jobManager.addJob("be/ida/jetpack/patch", properties)).willReturn(null);
 
         //test
         List<SimplePatchFile> patchesReturned = patchSystemJobService.executeNewPatches();
 
         //check
-        assertThat(patchesReturned).isNull();
+        assertThat(patchesReturned).isEmpty();
     }
 
     @Test

@@ -71,7 +71,7 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
 
     @Override
     public boolean isPatchSystemReady() {
-        return !onDeployScriptProvider.isEmpty();
+        return onDeployExecutor != null && !onDeployScriptProvider.isEmpty();
     }
 
     /**

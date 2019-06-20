@@ -60,10 +60,14 @@ public class PatchJobExecutorTest {
 
         given(patchSystemService.runPatch("/path/to/script-1.groovy")).willThrow(new IllegalArgumentException("Error"));
 
-        List<String> list = new ArrayList<>();
-        list.add("/path/to/script-1.groovy");
+        List<String> patchFiles = new ArrayList<>();
+        patchFiles.add("/path/to/script-1.groovy");
 
-        given(job.getProperty(JetpackConstants.PATCH_PATHS, List.class)).willReturn(list);
+        List<String> typeList = new ArrayList<>();
+        typeList.add("groovy");
+
+        given(job.getProperty(JetpackConstants.PATCH_PATHS, List.class)).willReturn(patchFiles);
+        given(job.getProperty(JetpackConstants.TYPES, List.class)).willReturn(typeList);
 
         JobExecutionResult result = patchJobExecutor.process(job, context);
         assertThat(result).isNotNull();
@@ -80,10 +84,14 @@ public class PatchJobExecutorTest {
 
         given(patchSystemService.runPatch("/path/to/script-1.groovy")).willReturn(new GroovyPatchResult());
 
-        List<String> list = new ArrayList<>();
-        list.add("/path/to/script-1.groovy");
+        List<String> patchFiles = new ArrayList<>();
+        patchFiles.add("/path/to/script-1.groovy");
 
-        given(job.getProperty(JetpackConstants.PATCH_PATHS, List.class)).willReturn(list);
+        List<String> typeList = new ArrayList<>();
+        typeList.add("groovy");
+
+        given(job.getProperty(JetpackConstants.PATCH_PATHS, List.class)).willReturn(patchFiles);
+        given(job.getProperty(JetpackConstants.TYPES, List.class)).willReturn(typeList);
 
         JobExecutionResult result = patchJobExecutor.process(job, context);
         assertThat(result).isNotNull();
@@ -101,11 +109,16 @@ public class PatchJobExecutorTest {
         given(patchSystemService.runPatch("/path/to/script-1.groovy")).willReturn(new GroovyPatchResult());
         given(patchSystemService.runPatch("/path/to/script-2.groovy")).willReturn(new GroovyPatchResult());
 
-        List<String> list = new ArrayList<>();
-        list.add("/path/to/script-1.groovy");
-        list.add("/path/to/script-2.groovy");
+        List<String> patchFiles = new ArrayList<>();
+        patchFiles.add("/path/to/script-1.groovy");
+        patchFiles.add("/path/to/script-2.groovy");
 
-        given(job.getProperty(JetpackConstants.PATCH_PATHS, List.class)).willReturn(list);
+        List<String> typeList = new ArrayList<>();
+        typeList.add("groovy");
+        typeList.add("groovy");
+
+        given(job.getProperty(JetpackConstants.PATCH_PATHS, List.class)).willReturn(patchFiles);
+        given(job.getProperty(JetpackConstants.TYPES, List.class)).willReturn(typeList);
 
         JobExecutionResult result = patchJobExecutor.process(job, context);
         assertThat(result).isNotNull();
