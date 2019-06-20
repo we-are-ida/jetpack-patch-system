@@ -23,7 +23,7 @@
             var patch = result.patches[i];
 
             var item = $(document.createElement("li"));
-            item.text(patch);
+            item.text(patch.patchFile);
             item.appendTo(list);
         }
 

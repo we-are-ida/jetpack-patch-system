@@ -1,6 +1,7 @@
 package be.ida.jetpack.patchsystem.servlets;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
+import be.ida.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -11,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -47,8 +51,11 @@ public class TriggerNewPatchesServletTest {
 
         MockSlingHttpServletResponse slingHttpServletResponse = new MockSlingHttpServletResponse();
 
-        given(patchSystemJobService.executeNewPatches())
-                .willReturn(Arrays.asList(new String[] {"/apps/script/1.groovy", "/apps/script/1.groovy"}));
+        List<SimplePatchFile> patchFiles = new ArrayList<>();
+        patchFiles.add(new SimplePatchFile("groovy", "/apps/script/1.groovy"));
+        patchFiles.add(new SimplePatchFile("groovy", "/apps/script/2.groovy"));
+
+        given(patchSystemJobService.executeNewPatches()).willReturn(patchFiles);
 
         servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);
 
@@ -63,7 +70,7 @@ public class TriggerNewPatchesServletTest {
 
         MockSlingHttpServletResponse slingHttpServletResponse = new MockSlingHttpServletResponse();
 
-        given(patchSystemJobService.executeNewPatches()).willReturn(Arrays.asList(new String[] {}));
+        given(patchSystemJobService.executeNewPatches()).willReturn(Collections.emptyList());
 
         servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);
 
@@ -78,7 +85,7 @@ public class TriggerNewPatchesServletTest {
 
         MockSlingHttpServletResponse slingHttpServletResponse = new MockSlingHttpServletResponse();
 
-        given(patchSystemJobService.executeNewPatches()).willReturn(Arrays.asList(new String[] {}));
+        given(patchSystemJobService.executeNewPatches()).willReturn(Collections.emptyList());
         given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
 
         servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);

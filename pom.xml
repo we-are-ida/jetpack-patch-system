@@ -513,7 +513,7 @@
             </dependency>
             <dependency>
                 <artifactId>acs-aem-commons-bundle</artifactId>
-                <version>4.0.0</version>
+                <version>4.3.0-SNAPSHOT</version>
                 <groupId>com.adobe.acs</groupId>
                 <scope>provided</scope>
             </dependency>

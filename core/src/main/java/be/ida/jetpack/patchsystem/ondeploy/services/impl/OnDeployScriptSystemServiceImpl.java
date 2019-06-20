@@ -8,6 +8,7 @@ import be.ida.jetpack.patchsystem.ondeploy.models.OnDeployPatchResult;
 import be.ida.jetpack.patchsystem.ondeploy.repositories.OnDeployScriptsResultRepository;
 import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import com.adobe.acs.commons.ondeploy.OnDeployScriptProvider;
+import com.adobe.acs.commons.ondeploy.OnDeployExecutor;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.framework.Constants;
@@ -42,11 +43,15 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
             policyOption = ReferencePolicyOption.GREEDY)
     private volatile List<OnDeployScriptProvider> onDeployScriptProvider = new CopyOnWriteArrayList<>();
 
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            policyOption = ReferencePolicyOption.GREEDY)
+    private volatile OnDeployExecutor onDeployExecutor;
+
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
 
     public List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver) {
-
         List<PatchFileWithResultResource> patchFiles = new ArrayList<>();
 
         onDeployScriptProvider
@@ -93,7 +98,37 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
         return patchResult == null || patchResult.isError();
     }
 
+    @Override
+    public List<PatchFile> getPatchesToExecute() {
+        List<PatchFile> patchFiles = new ArrayList<>();
+
+        onDeployScriptProvider
+                .forEach(provider -> {
+                    patchFiles.addAll(provider.getScripts()
+                      .stream()
+                      .map(item -> new OnDeployPatchFile(item, provider))
+                      .filter(this::isExecutable)
+                      .collect(Collectors.toList()));
+                });
+
+        return patchFiles;
+    }
+
+    @Override
+    public OnDeployPatchResult runPatch(String patchPath) {
+        if (onDeployExecutor != null) {
+            onDeployExecutor.executeScript(patchPath, true);
+
+            return patchResultRepository.getResult(patchPath);
+        }
+        return null;
+    }
+
     protected void unbindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
         this.onDeployScriptProvider.remove(scriptProvider);
+    }
+
+    protected void unbindOnDeployExecutor() {
+        this.onDeployExecutor = null;
     }
 }

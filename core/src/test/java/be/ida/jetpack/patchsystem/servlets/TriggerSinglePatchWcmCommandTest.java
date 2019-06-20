@@ -47,7 +47,7 @@ public class TriggerSinglePatchWcmCommandTest {
         given(slingHttpServletRequest.getRequestParameter("runnable")).willReturn(requestParameterRunnable);
         given(slingHttpServletRequest.getRequestParameter("type")).willReturn(requestParameterType);
 
-        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla", true)).willReturn(true);
+        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla")).willReturn(true);
 
         HtmlResponse htmlResponse = command.performCommand(mock(WCMCommandContext.class),
                 slingHttpServletRequest,
@@ -73,7 +73,7 @@ public class TriggerSinglePatchWcmCommandTest {
         given(slingHttpServletRequest.getRequestParameter("runnable")).willReturn(requestParameterRunnable);
         given(slingHttpServletRequest.getRequestParameter("type")).willReturn(requestParameterType);
 
-        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla", true)).willReturn(false);
+        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla")).willReturn(false);
 
         HtmlResponse htmlResponse = command.performCommand(mock(WCMCommandContext.class),
                 slingHttpServletRequest,
@@ -99,7 +99,7 @@ public class TriggerSinglePatchWcmCommandTest {
         given(slingHttpServletRequest.getRequestParameter("runnable")).willReturn(requestParameterRunnable);
         given(slingHttpServletRequest.getRequestParameter("type")).willReturn(requestParameterType);
 
-        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla", true)).willThrow(new NullPointerException("message"));
+        given(patchSystemJobService.executePatch("/apps/script/script.groovy", "bla")).willThrow(new NullPointerException("message"));
 
         HtmlResponse htmlResponse = command.performCommand(mock(WCMCommandContext.class),
                 slingHttpServletRequest,

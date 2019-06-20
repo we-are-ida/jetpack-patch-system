@@ -1,6 +1,7 @@
 package be.ida.jetpack.patchsystem.servlets;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
+import be.ida.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida.jetpack.patchsystem.servlets.responsemodels.PatchesListResponse;
@@ -54,7 +55,7 @@ public class HasPatchesToExecuteServlet extends SlingAllMethodsServlet {
     }
 
     private void process(SlingHttpServletResponse response) throws IOException {
-        List<String> patches = patchSystemJobService.getAllPatchesToExecute();
+        List<SimplePatchFile> patches = patchSystemJobService.getAllPatchesToExecute();
 
         PatchesListResponse output = new PatchesListResponse(patches);
 

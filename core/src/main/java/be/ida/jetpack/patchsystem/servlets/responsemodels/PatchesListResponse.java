@@ -1,5 +1,6 @@
 package be.ida.jetpack.patchsystem.servlets.responsemodels;
 
+import be.ida.jetpack.patchsystem.models.SimplePatchFile;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
@@ -11,9 +12,9 @@ import java.util.List;
 public class PatchesListResponse {
 
     private int count;
-    private List<String> patches;
+    private List<SimplePatchFile> patches;
 
-    public PatchesListResponse(List<String> patches) {
+    public PatchesListResponse(List<SimplePatchFile> patches) {
         this.patches = patches;
         if (CollectionUtils.isNotEmpty(this.patches)) {
             this.count = this.patches.size();
@@ -24,7 +25,7 @@ public class PatchesListResponse {
         return count;
     }
 
-    public List<String> getPatches() {
+    public List<SimplePatchFile> getPatches() {
         return patches;
     }
 }

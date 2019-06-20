@@ -3,8 +3,8 @@ package be.ida.jetpack.patchsystem.services.impl;
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.executors.PatchJobExecutor;
 import be.ida.jetpack.patchsystem.executors.JobResult;
-import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.models.PatchFile;
+import be.ida.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
@@ -43,17 +43,28 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
-    public boolean executePatch(String patchPath, String type, boolean runnable) {
-        if (runnable) {
-            return executePatches(Collections.singletonList(patchPath));
-        }
-        return false;
+    public boolean executePatch(String patchPath, String type) {
+        return executePatches(Collections.singletonList(new SimplePatchFile(type, patchPath)));
     }
 
     @Override
-    public boolean executePatches(List<String> patchPaths) {
-        if (CollectionUtils.isNotEmpty(patchPaths)) {
-            Map<String, Object> properties = Collections.singletonMap(JetpackConstants.PATCH_PATHS, patchPaths);
+    public boolean executePatches(List<SimplePatchFile> patchFiles) {
+        if (CollectionUtils.isNotEmpty(patchFiles)) {
+
+            List<String> patchPaths = patchFiles
+                    .stream()
+                    .map(SimplePatchFile::getPatchFile)
+                    .collect(Collectors.toList());
+
+            List<String> types = patchFiles
+                    .stream()
+                    .map(SimplePatchFile::getType)
+                    .collect(Collectors.toList());
+
+            Map<String, Object> properties = new HashMap<>();
+            properties.put(JetpackConstants.PATCH_PATHS, patchPaths);
+            properties.put(JetpackConstants.TYPES, types);
+
             Job job =  jobManager.addJob(PatchJobExecutor.TOPIC, properties);
             return job != null;
         }
@@ -61,15 +72,15 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     }
 
     @Override
-    public List<String> executeNewPatches() {
-        List<String> patchesToRun = getAllPatchesToExecute();
+    public List<SimplePatchFile> executeNewPatches() {
+        List<SimplePatchFile> patchesToRun = getAllPatchesToExecute();
 
         if (!CollectionUtils.isEmpty(patchesToRun)) {
             boolean success = executePatches(patchesToRun);
             if (success) {
                 return patchesToRun;
             } else {
-                return null;
+                return new ArrayList<>();
             }
         }
 
@@ -77,12 +88,16 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     }
 
     @Override
-    public List<String> getAllPatchesToExecute() {
+    public List<SimplePatchFile> getAllPatchesToExecute() {
         List<PatchFile> patchFiles = groovyPatchSystemService.getPatchesToExecute();
+
+        if (onDeployScriptSystemService.isPatchSystemReady()) {
+            patchFiles.addAll(onDeployScriptSystemService.getPatchesToExecute());
+        }
 
         return patchFiles
                 .stream()
-                .map(PatchFile::getPath)
+                .map(patchFile -> new SimplePatchFile(patchFile.getType(), patchFile.getPath()))
                 .collect(Collectors.toList());
     }
 

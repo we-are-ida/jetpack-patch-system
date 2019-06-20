@@ -1,18 +1,19 @@
 package be.ida.jetpack.patchsystem.services;
 
 import be.ida.jetpack.patchsystem.executors.JobResult;
+import be.ida.jetpack.patchsystem.models.SimplePatchFile;
 
 import java.util.List;
 
 public interface PatchSystemJobService {
 
-    boolean executePatch(String patchPath, String type, boolean runnable);
+    boolean executePatch(String patchPath, String type);
 
-    boolean executePatches(List<String> patchPaths);
+    boolean executePatches(List<SimplePatchFile> patchFiles);
 
-    List<String> getAllPatchesToExecute();
+    List<SimplePatchFile> getAllPatchesToExecute();
 
-    List<String> executeNewPatches();
+    List<SimplePatchFile> executeNewPatches();
 
     JobResult getPatchSystemStatus();
 }

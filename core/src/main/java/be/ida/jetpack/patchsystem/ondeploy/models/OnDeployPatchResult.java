@@ -39,7 +39,8 @@ public class OnDeployPatchResult implements PatchResult {
     @Optional
     private Calendar endDate;
 
-    //TODO tro to get output
+    @Inject
+    @Optional
     private String output;
 
     private String runningTime;

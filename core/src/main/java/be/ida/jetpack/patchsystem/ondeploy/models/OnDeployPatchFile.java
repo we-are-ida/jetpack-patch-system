@@ -50,7 +50,7 @@ public class OnDeployPatchFile implements PatchFile {
 
     @Override
     public boolean isRunnable() {
-        return false;
+        return true;
     }
 
     @Override
