@@ -2,11 +2,6 @@ package be.ida.jetpack.patchsystem.groovy.repositories.impl;
 
 import be.ida_mediafoundry.jetpack.carve.manager.ModelManager;
 import be.ida_mediafoundry.jetpack.carve.manager.exception.ModelManagerException;
-import be.ida.jetpack.patchsystem.models.PatchFile;
-import be.ida.jetpack.patchsystem.models.PatchFolder;
-import be.ida.jetpack.patchsystem.models.PatchResult;
-import be.ida.jetpack.carve.manager.ModelManager;
-import be.ida.jetpack.carve.manager.exception.ModelManagerException;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;

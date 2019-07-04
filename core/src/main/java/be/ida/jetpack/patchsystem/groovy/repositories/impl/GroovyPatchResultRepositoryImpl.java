@@ -1,12 +1,12 @@
 package be.ida.jetpack.patchsystem.groovy.repositories.impl;
 
-import be.ida.jetpack.carve.manager.ModelManager;
-import be.ida.jetpack.carve.manager.exception.ModelManagerException;
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchResultRepository;
 import be.ida.jetpack.patchsystem.models.PatchStatus;
+import be.ida_mediafoundry.jetpack.carve.manager.ModelManager;
+import be.ida_mediafoundry.jetpack.carve.manager.exception.ModelManagerException;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

@@ -1,11 +1,11 @@
 package be.ida.jetpack.patchsystem.groovy.models;
 
-import be.ida.jetpack.carve.annotations.CarveId;
-import be.ida.jetpack.carve.annotations.CarveModel;
-import be.ida.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
 import be.ida.jetpack.patchsystem.models.PatchResult;
 import be.ida.jetpack.patchsystem.models.PatchStatus;
 import be.ida.jetpack.patchsystem.utils.DateUtils;
+import be.ida_mediafoundry.jetpack.carve.annotations.CarveId;
+import be.ida_mediafoundry.jetpack.carve.annotations.CarveModel;
+import be.ida_mediafoundry.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;

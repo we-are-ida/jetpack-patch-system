@@ -1,10 +1,10 @@
 package be.ida.jetpack.patchsystem.ondeploy.repositories.impl;
 
-import be.ida.jetpack.carve.manager.ModelManager;
-import be.ida.jetpack.carve.manager.exception.ModelManagerException;
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.ondeploy.models.OnDeployPatchResult;
 import be.ida.jetpack.patchsystem.ondeploy.repositories.OnDeployScriptsResultRepository;
+import be.ida_mediafoundry.jetpack.carve.manager.ModelManager;
+import be.ida_mediafoundry.jetpack.carve.manager.exception.ModelManagerException;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

@@ -1,22 +1,17 @@
 package be.ida.jetpack.patchsystem.ondeploy.models;
 
-import be.ida.jetpack.carve.annotations.CarveId;
-import be.ida.jetpack.carve.annotations.CarveModel;
-import be.ida.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
 import be.ida.jetpack.patchsystem.models.PatchResult;
 import be.ida.jetpack.patchsystem.utils.DateUtils;
+import be.ida_mediafoundry.jetpack.carve.annotations.CarveId;
+import be.ida_mediafoundry.jetpack.carve.annotations.CarveModel;
+import be.ida_mediafoundry.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 @CarveModel(pathPolicyProvider = SimplePathPolicyProvider.class, location = "/var/acs-commons/on-deploy-scripts-status")
 @Model(adaptables = Resource.class)
@@ -39,7 +34,7 @@ public class OnDeployPatchResult implements PatchResult {
     @Optional
     private Calendar endDate;
 
-    //TODO tro to get output
+    //TODO try to get output
     private String output;
 
     private String runningTime;
