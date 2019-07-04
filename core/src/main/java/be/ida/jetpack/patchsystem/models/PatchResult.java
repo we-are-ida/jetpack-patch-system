@@ -1,8 +1,8 @@
 package be.ida.jetpack.patchsystem.models;
 
-import be.ida.jetpack.carve.annotations.CarveId;
-import be.ida.jetpack.carve.annotations.CarveModel;
-import be.ida.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
+import be.ida_mediafoundry.jetpack.carve.annotations.CarveId;
+import be.ida_mediafoundry.jetpack.carve.annotations.CarveModel;
+import be.ida_mediafoundry.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.Optional;

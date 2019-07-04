@@ -1,7 +1,7 @@
 package be.ida.jetpack.patchsystem.repositories.impl;
 
-import be.ida.jetpack.carve.manager.ModelManager;
-import be.ida.jetpack.carve.manager.exception.ModelManagerException;
+import be.ida_mediafoundry.jetpack.carve.manager.ModelManager;
+import be.ida_mediafoundry.jetpack.carve.manager.exception.ModelManagerException;
 import be.ida.jetpack.patchsystem.JetpackConstants;
 import be.ida.jetpack.patchsystem.models.PatchFile;
 import be.ida.jetpack.patchsystem.models.PatchResult;
