@@ -150,7 +150,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>be.ida.jetpack</groupId>
+            <groupId>be.ida-mediafoundry.jetpack</groupId>
             <artifactId>carve.core</artifactId>
         </dependency>
     </dependencies>
