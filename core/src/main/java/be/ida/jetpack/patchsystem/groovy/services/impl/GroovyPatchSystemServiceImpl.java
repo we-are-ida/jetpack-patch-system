@@ -1,13 +1,14 @@
-package be.ida.jetpack.patchsystem.services.impl;
+package be.ida.jetpack.patchsystem.groovy.services.impl;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.models.PatchFile;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
-import be.ida.jetpack.patchsystem.models.PatchResult;
-import be.ida.jetpack.patchsystem.repositories.PatchFileRepository;
-import be.ida.jetpack.patchsystem.repositories.PatchResultRepository;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
-import be.ida.jetpack.patchsystem.utils.PatchUtils;
+import be.ida.jetpack.patchsystem.groovy.utils.PatchUtils;
+import be.ida.jetpack.patchsystem.models.*;
+import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchResultRepository;
+import be.ida.jetpack.patchsystem.groovy.repositories.GroovyPatchFileRepository;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import com.icfolson.aem.groovy.console.GroovyConsoleService;
 import com.icfolson.aem.groovy.console.response.RunScriptResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -29,27 +30,24 @@ import java.util.stream.Collectors;
         immediate = true,
         name = "Jetpack - Patch System Service",
         configurationPolicy = ConfigurationPolicy.IGNORE,
-        service = { PatchSystemService.class },
+        service = { GroovyPatchSystemService.class },
         property={
                 Constants.SERVICE_DESCRIPTION + "=Service for accessing patches, results and run.",
                 Constants.SERVICE_VENDOR + ":String=" + JetpackConstants.VENDOR,
 
         })
-public class PatchSystemServiceImpl implements PatchSystemService {
+public class GroovyPatchSystemServiceImpl implements GroovyPatchSystemService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PatchSystemServiceImpl.class);
-
-    private static final String ERROR = "ERROR";
-    private static final String SUCCESS = "SUCCESS";
+    private static final Logger LOG = LoggerFactory.getLogger(GroovyPatchSystemServiceImpl.class);
 
     private static final String DEFAULT_USER = "jetpack-patch-system";
     private static final String DEFAULT_SERVICE = "be.ida.jetpack.patch-system.core";
 
     @Reference
-    private PatchResultRepository patchResultRepository;
+    private GroovyPatchResultRepository patchResultRepository;
 
     @Reference
-    private PatchFileRepository patchFileRepository;
+    private GroovyPatchFileRepository patchFileRepository;
 
     @Reference(cardinality = ReferenceCardinality.OPTIONAL,
             policy = ReferencePolicy.DYNAMIC,
@@ -60,9 +58,9 @@ public class PatchSystemServiceImpl implements PatchSystemService {
     private ResourceResolverFactory resourceResolverFactory;
 
     @Override
-    public PatchResult runPatch(String patchPath) {
-        PatchFile patchFile = patchFileRepository.getPatch(patchPath);
-        PatchResult patchResult = patchResultRepository.createResult(patchFile);
+    public GroovyPatchResult runPatch(String patchPath) {
+        GroovyPatchFile patchFile = patchFileRepository.getPatch(patchPath);
+        GroovyPatchResult patchResult = patchResultRepository.createResult(patchFile);
 
         try (ResourceResolver resourceResolver = resourceResolverFactory.getServiceResourceResolver(getCredentials())) {
             MockSlingHttpServletRequest mockRequest = new MockSlingHttpServletRequest(resourceResolver);
@@ -76,22 +74,22 @@ public class PatchSystemServiceImpl implements PatchSystemService {
 
                 //process response of script execution
                 if (StringUtils.isBlank(response.getExceptionStackTrace())) {
-                    patchResult.setStatus(SUCCESS);
+                    patchResult.setStatus(PatchStatus.SUCCESS);
                     if (StringUtils.isNotBlank(response.getOutput())) {
                         patchResult.setOutput(response.getOutput());
                     }
                 } else {
-                    patchResult.setStatus(ERROR);
+                    patchResult.setStatus(PatchStatus.ERROR);
                     patchResult.setOutput(response.getExceptionStackTrace());
                 }
             } else {
                 LOG.error("Groovy Console is not installed.");
-                patchResult.setStatus(ERROR);
+                patchResult.setStatus(PatchStatus.ERROR);
                 patchResult.setOutput("Groovy Console is not installed.");
             }
         } catch (Exception e) {
             LOG.error("Could not execute script", e);
-            patchResult.setStatus(ERROR);
+            patchResult.setStatus(PatchStatus.ERROR);
             patchResult.setOutput("Script Execution error, check log files");
         }
 
@@ -111,7 +109,7 @@ public class PatchSystemServiceImpl implements PatchSystemService {
         return patchFileRepository.getPatches()
                 .stream()
                 .map(patchFile -> {
-                    PatchResult patchResult = getMatchingPatchResult(patchFile);
+                    GroovyPatchResult patchResult = getMatchingPatchResult(patchFile);
                     boolean diff = PatchUtils.isDiff(patchFile, patchResult);
                     return new PatchFileWithResultResource(resourceResolver, patchFile, patchResult, diff);
                 })
@@ -124,13 +122,13 @@ public class PatchSystemServiceImpl implements PatchSystemService {
     }
 
     /**
-     * Return the PatchResult for the provided Patch File.
-     * The PatchResult contains the actual run state of the patch.
+     * Return the GroovyPatchResult for the provided Patch File.
+     * The GroovyPatchResult contains the actual run state of the patch.
      *
      * @param patchFile patch file to get the result from/
      * @return result or null
      */
-    private PatchResult getMatchingPatchResult(PatchFile patchFile) {
+    private GroovyPatchResult getMatchingPatchResult(GroovyPatchFile patchFile) {
         return patchResultRepository.getResult(patchFile);
     }
 
@@ -142,8 +140,8 @@ public class PatchSystemServiceImpl implements PatchSystemService {
      * @param patchFile patch file to check
      * @return true in case it's a new or modified script.
      */
-    private boolean isExecutable(PatchFile patchFile) {
-        PatchResult patchResult = getMatchingPatchResult(patchFile);
+    private boolean isExecutable(GroovyPatchFile patchFile) {
+        GroovyPatchResult patchResult = getMatchingPatchResult(patchFile);
         if (patchResult == null) {
             return true;
         } else {

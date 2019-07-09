@@ -1,6 +1,6 @@
 package be.ida.jetpack.patchsystem.servlets;
 
-import be.ida.jetpack.patchsystem.models.jobs.JobResult;
+import be.ida.jetpack.patchsystem.executors.JobResult;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.servlethelpers.MockSlingHttpServletResponse;

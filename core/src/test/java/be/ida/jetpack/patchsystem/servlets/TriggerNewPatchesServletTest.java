@@ -1,6 +1,7 @@
 package be.ida.jetpack.patchsystem.servlets;
 
 import be.ida.jetpack.patchsystem.JetpackConstants;
+import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.servlethelpers.MockSlingHttpServletResponse;
@@ -24,6 +25,9 @@ public class TriggerNewPatchesServletTest {
 
     @Mock
     private PatchSystemJobService patchSystemJobService;
+
+    @Mock
+    private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Test
     public void test_doPost_invalid() {
@@ -49,7 +53,7 @@ public class TriggerNewPatchesServletTest {
         servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);
 
         assertThat(slingHttpServletResponse.getStatus()).isEqualTo(200);
-        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"Success\",\"patches\":[\"/apps/script/1.groovy\",\"/apps/script/1.groovy\"]}");
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"Success.\",\"patches\":[\"/apps/script/1.groovy\",\"/apps/script/1.groovy\"]}");
     }
 
     @Test
@@ -64,7 +68,23 @@ public class TriggerNewPatchesServletTest {
         servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);
 
         assertThat(slingHttpServletResponse.getStatus()).isEqualTo(200);
-        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"No patches found to trigger\"}");
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"No patches found to trigger.\"}");
+    }
+
+    @Test
+    public void test_doPost_valid_noScriptsFound_withOnDeployScripts() {
+        SlingHttpServletRequest slingHttpServletRequest = mock(SlingHttpServletRequest.class);
+        given(slingHttpServletRequest.getContentType()).willReturn(JetpackConstants.APPLICATION_JSON);
+
+        MockSlingHttpServletResponse slingHttpServletResponse = new MockSlingHttpServletResponse();
+
+        given(patchSystemJobService.executeNewPatches()).willReturn(Arrays.asList(new String[] {}));
+        given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
+
+        servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);
+
+        assertThat(slingHttpServletResponse.getStatus()).isEqualTo(200);
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"No patches found to trigger. On Deploy Scripts cannot be triggered using the Patch System.\"}");
     }
 
     @Test
@@ -79,7 +99,7 @@ public class TriggerNewPatchesServletTest {
         servlet.doPost(slingHttpServletRequest, slingHttpServletResponse);
 
         assertThat(slingHttpServletResponse.getStatus()).isEqualTo(500);
-        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"Could not trigger patches\"}");
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"message\":\"Could not trigger patches.\"}");
     }
 
     @Test

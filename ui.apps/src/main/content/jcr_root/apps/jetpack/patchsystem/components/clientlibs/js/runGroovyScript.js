@@ -1,19 +1,3 @@
-/*
- * ADOBE CONFIDENTIAL
- *
- * Copyright 2015 Adobe Systems Incorporated
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Adobe Systems Incorporated and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Adobe Systems Incorporated and its
- * suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Adobe Systems Incorporated.
- */
 (function(window, document, $, Granite) {
     "use strict";
 
@@ -61,7 +45,7 @@
         };
     }
 
-    function runGroovyScripts(paths, projects, scripts) {
+    function runGroovyScripts(paths, projects, scripts, types, runnables) {
 
         var tickerMessage = $(document.createElement("div"));
 
@@ -69,7 +53,7 @@
 
         // creates an anonymous function that executes a run request for the specified path
         // and returns a promise that resolves after the call has completed (successfully or not)
-        function createRunRequest(path, project, script) {
+        function createRunRequest(path, project, script, type, runnable) {
             return function () {
 
                 wt.updateMessage(tickerMessage.html()
@@ -82,12 +66,14 @@
                     data: {
                         _charset_: "UTF-8",
                         cmd: "triggerSinglePatch",
-                        path: path
+                        path: path,
+                        type: type,
+                        runnable: runnable
                     }
                 }).fail(function() {
                     //console.error("Failed to run", path);
                     $(document.createElement("div"))
-                        .html(project+": "+ script + "&nbsp;&nbsp; <b class='groovy-run--failed'>Triggered failed</b>")
+                        .html(project+": "+ script + "&nbsp;&nbsp; <b class='groovy-run--failed'>Trigger failed</b>")
                         .appendTo(tickerMessage);
                 }).done(function() {
                     //console.log("Ran successfully", path);
@@ -114,7 +100,9 @@
             var path = paths[i];
             var project = projects[i];
             var script = scripts[i];
-            requests = requests.then(createRunRequest(path, project, script));
+            var type = types[i];
+            var runnable = runnables[i];
+            requests = requests.then(createRunRequest(path, project, script, type, runnable));
         }
 
         // hide spinner and reload page after all requests have been executed
@@ -138,7 +126,7 @@
             if (selections.length === 1) {
                 intro.text(Granite.I18n.get("You are going to run the following Groovy script:"));
             } else {
-                intro.text(Granite.I18n.get("You are going to run the following {0} Groovy scripts                                                                                                                :", selections.length));
+                intro.text(Granite.I18n.get("You are going to run the following {0} Groovy scripts:", selections.length));
             }
 
             var list = [];
@@ -171,7 +159,15 @@
                         return $(v).data("script");
                     });
 
-                    runGroovyScripts(paths, projects, scripts);
+                    var types = selections.map(function(v) {
+                        return $(v).data("type");
+                    });
+
+                    var runnables = selections.map(function(v) {
+                        return $(v).data("runnable");
+                    });
+
+                    runGroovyScripts(paths, projects, scripts, types, runnables);
                 }
             }]);
         }

@@ -1,5 +1,8 @@
 package be.ida.jetpack.patchsystem.models;
 
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchFolder;
 import io.wcm.testing.mock.aem.junit.AemContext;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
@@ -14,7 +17,7 @@ import java.util.Calendar;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PatchFileWithResultTest {
+public class PatchFileWithResultResourceTest {
 
     @Rule
     public final AemContext context = new AemContext();
@@ -22,22 +25,22 @@ public class PatchFileWithResultTest {
     @Before
     public void setUp() throws Exception {
         context.load().json("/mocks/patches.json", "/apps/patches");
-        context.addModelsForClasses(PatchFileWithResult.class, PatchFolder.class, PatchFile.class);
+        context.addModelsForClasses(PatchFileWithResult.class, GroovyPatchFolder.class, GroovyPatchFile.class);
         context.request().setContextPath("context");
     }
 
     @Test
     public void test_newResult_notModified() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        PatchResult patchResult = new PatchResult("1000", "RUNNING", calendar);
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
 
         PatchFileWithResultResource patchFileWithResultResource = new PatchFileWithResultResource(context.resourceResolver(),
                 patchFile, patchResult, false);
@@ -65,16 +68,16 @@ public class PatchFileWithResultTest {
     @Test
     public void test_finalResult_Success_notModified() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        PatchResult patchResult = new PatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("SUCCESS");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.SUCCESS);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");
@@ -96,16 +99,16 @@ public class PatchFileWithResultTest {
     @Test
     public void test_finalResult_Error_notModified() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        PatchResult patchResult = new PatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("ERROR");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.ERROR);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");
@@ -127,16 +130,16 @@ public class PatchFileWithResultTest {
     @Test
     public void test_finalResult_Success_modified() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        PatchResult patchResult = new PatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("SUCCESS");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.SUCCESS);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");
@@ -160,15 +163,15 @@ public class PatchFileWithResultTest {
     @Test
     public void test_finalResult_other_notModified() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        PatchResult patchResult = new PatchResult("1000", "RUNNING", calendar);
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
         patchResult.setStatus("OTHER");
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
@@ -193,10 +196,10 @@ public class PatchFileWithResultTest {
     @Test
     public void test_noResult() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
@@ -211,23 +214,23 @@ public class PatchFileWithResultTest {
         assertThat(patchFileWithResult.getStatus()).isEqualTo("NEW");
         assertThat(patchFileWithResult.getOutput()).isNull();
         assertThat(patchFileWithResult.getRunningTime()).isNull();
-        assertThat(patchFileWithResult.getThumbnail()).isEqualTo("context/apps/jetpack/patchsystem/components/thumb.png");
+        assertThat(patchFileWithResult.getThumbnail()).isEqualTo("context/apps/jetpack/patchsystem/components/thumb-groovy.png");
         assertThat(patchFileWithResult.getDateExecuted()).isNull();
     }
 
     @Test
     public void test_AdaptToValueMap() {
         Resource scriptResource = context.resourceResolver().getResource("/apps/patches/project-A/script-1.groovy");
-        PatchFile patchFile = scriptResource.adaptTo(PatchFile.class);
+        GroovyPatchFile patchFile = scriptResource.adaptTo(GroovyPatchFile.class);
 
         Resource folderResource = context.resourceResolver().getResource("/apps/patches/project-A");
-        PatchFolder patchFolder = folderResource.adaptTo(PatchFolder.class);
+        GroovyPatchFolder patchFolder = folderResource.adaptTo(GroovyPatchFolder.class);
 
         patchFile.setParentFolder(patchFolder);
 
         Calendar calendar = Calendar.getInstance();
-        PatchResult patchResult = new PatchResult("1000", "RUNNING", calendar);
-        patchResult.setStatus("ERROR");
+        GroovyPatchResult patchResult = new GroovyPatchResult("1000", PatchStatus.RUNNING, calendar);
+        patchResult.setStatus(PatchStatus.ERROR);
         patchResult.setOutput("Output");
         patchResult.setEndDate(calendar);
         patchResult.setRunningTime("200");

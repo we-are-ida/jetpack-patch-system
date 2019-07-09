@@ -1,13 +1,13 @@
-package be.ida.jetpack.patchsystem.services;
+package be.ida.jetpack.patchsystem.groovy.services;
 
 import be.ida.jetpack.patchsystem.models.PatchFile;
 import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
-import be.ida.jetpack.patchsystem.models.PatchResult;
+import be.ida.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import org.apache.sling.api.resource.ResourceResolver;
 
 import java.util.List;
 
-public interface PatchSystemService {
+public interface GroovyPatchSystemService {
 
     boolean isPatchSystemReady();
 
@@ -15,5 +15,5 @@ public interface PatchSystemService {
 
     List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver);
 
-    PatchResult runPatch(String patchPath);
+    GroovyPatchResult runPatch(String patchPath);
 }

@@ -1,8 +1,9 @@
 package be.ida.jetpack.patchsystem.services.impl;
 
 import be.ida.jetpack.patchsystem.models.PatchFileWithResultResource;
+import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida.jetpack.patchsystem.services.PatchSystemDataSourceService;
-import be.ida.jetpack.patchsystem.services.PatchSystemService;
+import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import com.adobe.granite.ui.components.ComponentHelper;
 import com.adobe.granite.ui.components.Config;
 import com.adobe.granite.ui.components.ExpressionHelper;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +34,10 @@ public class PatchSystemDataSourceServiceImpl implements PatchSystemDataSourceSe
     private static final Logger LOG = LoggerFactory.getLogger(PatchSystemDataSourceService.class);
 
     @Reference
-    private PatchSystemService patchSystemService;
+    private GroovyPatchSystemService groovyPatchSystemService;
+
+    @Reference
+    private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
     public DataSource getDataSource(HttpServletRequest request, Object cmp, Resource resource) {
@@ -46,7 +51,7 @@ public class PatchSystemDataSourceServiceImpl implements PatchSystemDataSourceSe
         ResourceResolver resourceResolver = resource.getResourceResolver();
 
         try {
-            final List<PatchFileWithResultResource> patchResources = patchSystemService.getPatches(resourceResolver);
+            final List<PatchFileWithResultResource> patchResources = getPatches(resourceResolver);
             final Iterator<PatchFileWithResultResource> iterator = patchResources.iterator();
 
             @SuppressWarnings("unchecked")
@@ -74,5 +79,14 @@ public class PatchSystemDataSourceServiceImpl implements PatchSystemDataSourceSe
         }
 
         return EmptyDataSource.instance();
+    }
+
+    private List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver) {
+        List<PatchFileWithResultResource> patches = new ArrayList<>();
+
+        patches.addAll(groovyPatchSystemService.getPatches(resourceResolver));
+        patches.addAll(onDeployScriptSystemService.getPatches(resourceResolver));
+
+        return patches;
     }
 }

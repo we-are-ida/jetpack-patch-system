@@ -46,21 +46,24 @@ public class PatchFileWithResultResource extends SyntheticResource {
     private Map<String, Object> createPropertiesMap() {
         Map<String, Object> properties = new HashMap<>();
 
+        properties.put("type", patchFile.getType());
+        properties.put("runnable", patchFile.isRunnable());
         properties.put("projectName", patchFile.getProjectName());
         properties.put("scriptName", patchFile.getScriptName());
 
         if (patchResult != null) {
-            properties.put("status", patchResult.getStatus());
             properties.put("startDate", patchResult.getStartDate());
             properties.put("endDate", patchResult.getEndDate());
             properties.put("output", patchResult.getOutput());
             properties.put("runningTime", patchResult.getRunningTime());
 
-            if (modified) {
-                properties.put("status", "RE-RUN");
+            if (modified && !PatchStatus.RUNNING.isOfStatus(patchResult)) {
+                properties.put("status", PatchStatus.RERUN.displayName());
+            } else {
+                properties.put("status", patchResult.getStatus());
             }
         } else {
-            properties.put("status", "NEW");
+            properties.put("status", PatchStatus.NEW.displayName());
         }
 
         return properties;

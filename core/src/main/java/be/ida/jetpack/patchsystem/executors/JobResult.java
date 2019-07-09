@@ -1,4 +1,4 @@
-package be.ida.jetpack.patchsystem.models.jobs;
+package be.ida.jetpack.patchsystem.executors;
 
 public class JobResult {
 
