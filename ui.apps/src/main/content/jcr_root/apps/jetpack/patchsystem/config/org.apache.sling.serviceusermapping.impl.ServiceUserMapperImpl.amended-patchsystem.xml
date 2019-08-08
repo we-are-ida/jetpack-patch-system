@@ -3,4 +3,4 @@
       xmlns:jcr="http://www.jcp.org/jcr/1.0"
       jcr:primaryType="sling:OsgiConfig"
       user.default="jetpack-patch-system"
-      user.mapping="[be.ida-mediafoundry.jetpack.patch-system.core=jetpack-patch-system]" />
+      user.mapping="[be.ida_mediafoundry.jetpack.patch-system.core=jetpack-patch-system]" />
