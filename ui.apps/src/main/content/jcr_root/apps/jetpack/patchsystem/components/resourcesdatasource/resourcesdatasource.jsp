@@ -1,7 +1,7 @@
 <%
 %><%@include file="/libs/granite/ui/global.jsp"%><%
 %><%@page session="false"
-          import="be.ida.jetpack.patchsystem.services.PatchSystemDataSourceService"
+          import="be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemDataSourceService"
           import="com.adobe.granite.ui.components.ds.DataSource"%>
 <%
     PatchSystemDataSourceService service = (PatchSystemDataSourceService)sling.getService(PatchSystemDataSourceService.class);

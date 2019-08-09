@@ -6,7 +6,7 @@
     <!-- P A R E N T  P R O J E C T  D E S C R I P T I O N                      -->
     <!-- ====================================================================== -->
     <parent>
-        <groupId>be.ida.jetpack</groupId>
+        <groupId>be.ida_mediafoundry.jetpack</groupId>
         <artifactId>patch-system</artifactId>
         <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
@@ -98,7 +98,7 @@
                     </dependencies>
                     <embeddeds>
                         <embedded>
-                            <groupId>be.ida.jetpack</groupId>
+                            <groupId>be.ida_mediafoundry.jetpack</groupId>
                             <artifactId>patch-system.core</artifactId>
                             <target>/apps/jetpack/patchsystem/install</target>
                         </embedded>
@@ -123,7 +123,7 @@
     <!-- ====================================================================== -->
     <dependencies>
         <dependency>
-            <groupId>be.ida.jetpack</groupId>
+            <groupId>be.ida_mediafoundry.jetpack</groupId>
             <artifactId>patch-system.core</artifactId>
             <version>${project.version}</version>
         </dependency>
