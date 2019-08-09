@@ -531,7 +531,7 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>be.ida_mediafoundry.jetpack</groupId>
+                <groupId>be.ida-mediafoundry.jetpack</groupId>
                 <artifactId>carve.core</artifactId>
                 <version>1.0.0</version>
                 <scope>provided</scope>
