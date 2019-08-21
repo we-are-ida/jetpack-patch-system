@@ -87,10 +87,10 @@
                         <acHandling>merge_preserve</acHandling>
                     </properties>
                     <dependencies>
-                        <dependency>
+                        <!--dependency>
                             <group>ICF Olson</group>
                             <name>aem-groovy-console</name>
-                        </dependency>
+                        </dependency-->
                         <dependency>
                             <group>Jetpack</group>
                             <name>Jetpack-Carve</name>
