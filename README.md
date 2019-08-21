@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/ida-mediafoundry/jetpack-patch-system.svg?branch=master)](https://travis-ci.org/ida-mediafoundry/jetpack-patch-system)
+[![Build Status](https://travis-ci.org/ida-mediafoundry/jetpack-patch-system.svg?branch=master)](https://travis-ci.org/ida-mediafoundry/jetpack-patch-system) [![codecov](https://codecov.io/gh/ida-mediafoundry/jetpack-patch-system/branch/master/graph/badge.svg)](https://codecov.io/gh/ida-mediafoundry/jetpack-patch-system)
+
 # Jetpack - Patch System
 (powered by iDA Mediafoundry)
 
