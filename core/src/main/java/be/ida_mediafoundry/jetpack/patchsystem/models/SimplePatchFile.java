@@ -1,4 +1,4 @@
-package be.ida.jetpack.patchsystem.models;
+package be.ida_mediafoundry.jetpack.patchsystem.models;
 
 /**
  * @author michael

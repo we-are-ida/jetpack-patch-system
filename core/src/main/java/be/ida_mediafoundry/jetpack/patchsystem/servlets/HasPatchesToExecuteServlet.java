@@ -1,6 +1,7 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemJobService;
 import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels.PatchesListResponse;

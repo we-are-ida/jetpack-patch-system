@@ -1,13 +1,9 @@
 package be.ida_mediafoundry.jetpack.patchsystem.executors;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
-import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
+import be.ida_mediafoundry.jetpack.patchsystem.models.PatchResult;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
-import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
-import be.ida.jetpack.patchsystem.models.PatchResult;
-import be.ida.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobExecutionContext;

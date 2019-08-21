@@ -1,13 +1,9 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
-import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemJobService;
 import be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels.TriggerResponse;
-import be.ida.jetpack.patchsystem.JetpackConstants;
-import be.ida.jetpack.patchsystem.models.SimplePatchFile;
-import be.ida.jetpack.patchsystem.services.PatchSystemJobService;
-import be.ida.jetpack.patchsystem.servlets.responsemodels.TriggerResponse;
 import com.google.gson.Gson;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.api.SlingHttpServletRequest;

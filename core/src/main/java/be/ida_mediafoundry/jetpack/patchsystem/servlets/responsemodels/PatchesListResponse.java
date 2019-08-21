@@ -1,6 +1,6 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels;
 
-import be.ida.jetpack.patchsystem.models.SimplePatchFile;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;

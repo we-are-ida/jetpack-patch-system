@@ -1,8 +1,7 @@
 package be.ida_mediafoundry.jetpack.patchsystem.services;
 
 import be.ida_mediafoundry.jetpack.patchsystem.executors.JobResult;
-import be.ida.jetpack.patchsystem.executors.JobResult;
-import be.ida.jetpack.patchsystem.models.SimplePatchFile;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 
 import java.util.List;
 
