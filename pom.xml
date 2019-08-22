@@ -4,7 +4,7 @@
     <groupId>be.ida_mediafoundry.jetpack</groupId>
     <artifactId>patch-system</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0-SNAPSHOT</version>
 
     <name>Jetpack - Patch System</name>
     <description>Jetpack Patch System.</description>

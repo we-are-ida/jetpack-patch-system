@@ -96,14 +96,14 @@
                     title="Trigger Patch System will run all new and re-run patches"
                     variant="primary">
                 </runnew>
-                <classicUI
+                <!--classicUI
                     jcr:primaryType="nt:unstructured"
                     sling:resourceType="granite/ui/components/coral/foundation/collection/actionlink"
                     text="Groovy Console"
                     title="Groovy Console"
                     href="/groovyconsole"
                     variant="primary">
-                </classicUI>
+                </classicUI-->
             </secondary>
             <selection jcr:primaryType="nt:unstructured">
                 <runGroovyScript
