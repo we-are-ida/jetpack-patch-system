@@ -33,12 +33,10 @@ public class PatchSystemDataSourceServiceImpl implements PatchSystemDataSourceSe
     private static final Logger LOG = LoggerFactory.getLogger(PatchSystemDataSourceService.class);
 
     @Reference(cardinality = ReferenceCardinality.OPTIONAL,
-            policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
     private GroovyPatchSystemService groovyPatchSystemService;
 
     @Reference(cardinality = ReferenceCardinality.OPTIONAL,
-            policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
@@ -87,8 +85,12 @@ public class PatchSystemDataSourceServiceImpl implements PatchSystemDataSourceSe
     private List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver) {
         List<PatchFileWithResultResource> patches = new ArrayList<>();
 
-        patches.addAll(groovyPatchSystemService.getPatches(resourceResolver));
-        patches.addAll(onDeployScriptSystemService.getPatches(resourceResolver));
+        if (groovyPatchSystemService != null) {
+            patches.addAll(groovyPatchSystemService.getPatches(resourceResolver));
+        }
+        if (onDeployScriptSystemService != null) {
+            patches.addAll(onDeployScriptSystemService.getPatches(resourceResolver));
+        }
 
         return patches;
     }
