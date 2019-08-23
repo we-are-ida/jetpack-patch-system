@@ -11,6 +11,8 @@ import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,7 @@ import java.util.List;
  * @since : 09/11/2018
  */
 @Component(
+        immediate = true,
         service = JobExecutor.class,
         property = {JobExecutor.PROPERTY_TOPICS + "=" + PatchJobExecutor.TOPIC}
 )
@@ -30,10 +33,12 @@ public class PatchJobExecutor implements JobExecutor {
     private static final Logger LOG = LoggerFactory.getLogger(PatchJobExecutor.class);
     private static final long ETA = -1L;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private GroovyPatchSystemService groovyPatchSystemService;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
@@ -68,9 +73,13 @@ public class PatchJobExecutor implements JobExecutor {
 
             PatchResult patchResult = null;
             if ("groovy".equals(type)) {
-                patchResult = groovyPatchSystemService.runPatch(patchPath);
+                if (groovyPatchSystemService != null) {
+                    patchResult = groovyPatchSystemService.runPatch(patchPath);
+                }
             } else if ("onDeployScript".equals(type)) {
-                patchResult = onDeployScriptSystemService.runPatch(patchPath);
+                if (onDeployScriptSystemService != null) {
+                    patchResult = onDeployScriptSystemService.runPatch(patchPath);
+                }
             }
 
             context.incrementProgressCount(progressCounter++);

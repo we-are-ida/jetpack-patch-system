@@ -15,6 +15,8 @@ import org.apache.sling.event.jobs.JobManager;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +38,12 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     @Reference
     private JobManager jobManager;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private GroovyPatchSystemService groovyPatchSystemService;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
@@ -89,9 +93,13 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
 
     @Override
     public List<SimplePatchFile> getAllPatchesToExecute() {
-        List<PatchFile> patchFiles = groovyPatchSystemService.getPatchesToExecute();
+        List<PatchFile> patchFiles = new ArrayList<>();
 
-        if (onDeployScriptSystemService.isPatchSystemReady()) {
+        if (groovyPatchSystemService != null && groovyPatchSystemService.isPatchSystemReady()) {
+            patchFiles.addAll(groovyPatchSystemService.getPatchesToExecute());
+        }
+
+        if (onDeployScriptSystemService != null && onDeployScriptSystemService.isPatchSystemReady()) {
             patchFiles.addAll(onDeployScriptSystemService.getPatchesToExecute());
         }
 
@@ -116,5 +124,13 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
         }
 
         return new JobResult(false);
+    }
+
+    protected void unbindOnDeployScriptSystemService() {
+        this.onDeployScriptSystemService = null;
+    }
+
+    protected void unbindGroovyPatchSystemService() {
+        this.groovyPatchSystemService = null;
     }
 }
