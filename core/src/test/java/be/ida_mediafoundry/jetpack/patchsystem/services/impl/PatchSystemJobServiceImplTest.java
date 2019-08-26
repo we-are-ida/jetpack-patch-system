@@ -121,6 +121,7 @@ public class PatchSystemJobServiceImplTest {
     @Test
     public void testExecuteNewPatches_notFound() {
         //given
+        given(patchSystemService.isPatchSystemReady()).willReturn(true);
         given(patchSystemService.getPatchesToExecute()).willReturn(new ArrayList<>());
 
         //test
@@ -144,6 +145,8 @@ public class PatchSystemJobServiceImplTest {
         patchFiles.add(patchFile2);
 
         given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
+        given(patchSystemService.isPatchSystemReady()).willReturn(true);
+        given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
 
         given(jobManager.addJob(eq("be/ida/jetpack/patch"), any())).willReturn(mock(Job.class));
 
@@ -176,6 +179,7 @@ public class PatchSystemJobServiceImplTest {
 
         given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
         given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
+        given(patchSystemService.isPatchSystemReady()).willReturn(true);
 
         List<String> patches = Arrays.asList(new String[] {"/apps/patch/path1.groovy", "/apps/patch/path2.groovy"});
         List<String> types = Arrays.asList(new String[] {"groovy", "groovy"});
