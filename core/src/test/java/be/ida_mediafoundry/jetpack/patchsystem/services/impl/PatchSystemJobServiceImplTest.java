@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PatchSystemJobServiceImplTest {
@@ -36,7 +36,7 @@ public class PatchSystemJobServiceImplTest {
     private JobManager jobManager;
 
     @Mock
-    private GroovyPatchSystemService patchSystemService;
+    private GroovyPatchSystemService groovyPatchSystemService;
 
     @Mock
     private OnDeployScriptSystemService onDeployScriptSystemService;
@@ -121,8 +121,8 @@ public class PatchSystemJobServiceImplTest {
     @Test
     public void testExecuteNewPatches_notFound() {
         //given
-        given(patchSystemService.isPatchSystemReady()).willReturn(true);
-        given(patchSystemService.getPatchesToExecute()).willReturn(new ArrayList<>());
+        given(groovyPatchSystemService.isPatchSystemReady()).willReturn(true);
+        given(groovyPatchSystemService.getPatchesToExecute()).willReturn(new ArrayList<>());
 
         //test
         List<SimplePatchFile> patches = patchSystemJobService.executeNewPatches();
@@ -144,8 +144,8 @@ public class PatchSystemJobServiceImplTest {
         patchFiles.add(patchFile1);
         patchFiles.add(patchFile2);
 
-        given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
-        given(patchSystemService.isPatchSystemReady()).willReturn(true);
+        given(groovyPatchSystemService.getPatchesToExecute()).willReturn(patchFiles);
+        given(groovyPatchSystemService.isPatchSystemReady()).willReturn(true);
         given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
 
         given(jobManager.addJob(eq("be/ida/jetpack/patch"), any())).willReturn(mock(Job.class));
@@ -177,9 +177,9 @@ public class PatchSystemJobServiceImplTest {
         patchFiles.add(patchFile1);
         patchFiles.add(patchFile2);
 
-        given(patchSystemService.getPatchesToExecute()).willReturn(patchFiles);
+        given(groovyPatchSystemService.getPatchesToExecute()).willReturn(patchFiles);
         given(onDeployScriptSystemService.isPatchSystemReady()).willReturn(true);
-        given(patchSystemService.isPatchSystemReady()).willReturn(true);
+        given(groovyPatchSystemService.isPatchSystemReady()).willReturn(true);
 
         List<String> patches = Arrays.asList(new String[] {"/apps/patch/path1.groovy", "/apps/patch/path2.groovy"});
         List<String> types = Arrays.asList(new String[] {"groovy", "groovy"});
@@ -238,5 +238,18 @@ public class PatchSystemJobServiceImplTest {
         assertThat(result.getProgress()).isEqualTo(0);
         assertThat(result.getNumberOfPatches()).isEqualTo(4);
         assertThat(result.getLogs()).isEqualTo("Message 1, Message 2");
+    }
+
+    @Test
+    public void testUnBinding() {
+        patchSystemJobService.unbindGroovyPatchSystemService();
+        patchSystemJobService.unbindOnDeployScriptSystemService();
+
+        List<SimplePatchFile> patchFiles = patchSystemJobService.getAllPatchesToExecute();
+
+        assertThat(patchFiles).isEmpty();
+
+        verify(groovyPatchSystemService, never()).getPatchesToExecute();
+        verify(onDeployScriptSystemService, never()).getPatchesToExecute();
     }
 }

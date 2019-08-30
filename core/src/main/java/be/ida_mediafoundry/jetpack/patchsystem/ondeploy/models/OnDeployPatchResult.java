@@ -18,6 +18,7 @@ import java.util.Calendar;
 public class OnDeployPatchResult implements PatchResult {
 
     private static final String FAIL = "fail";
+    private static final String ERROR = "ERROR";
 
     @CarveId
     @Inject
@@ -43,7 +44,7 @@ public class OnDeployPatchResult implements PatchResult {
     @PostConstruct
     protected void initModel() {
         if (FAIL.equals(this.status)) {
-            this.status = "ERROR";
+            this.status = ERROR;
         }
         this.status = status.toUpperCase();
 
@@ -76,6 +77,6 @@ public class OnDeployPatchResult implements PatchResult {
 
     @Override
     public boolean isError() {
-        return getStatus().equals("ERROR");
+        return ERROR.equals(getStatus());
     }
 }

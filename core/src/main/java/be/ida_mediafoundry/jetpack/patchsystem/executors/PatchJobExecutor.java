@@ -72,14 +72,10 @@ public class PatchJobExecutor implements JobExecutor {
             context.log("Executing patch '{0}' of type '{1}'", patchPath, types);
 
             PatchResult patchResult = null;
-            if ("groovy".equals(type)) {
-                if (groovyPatchSystemService != null) {
-                    patchResult = groovyPatchSystemService.runPatch(patchPath);
-                }
-            } else if ("onDeployScript".equals(type)) {
-                if (onDeployScriptSystemService != null) {
-                    patchResult = onDeployScriptSystemService.runPatch(patchPath);
-                }
+            if ("groovy".equals(type) && groovyPatchSystemService != null) {
+                patchResult = groovyPatchSystemService.runPatch(patchPath);
+            } else if ("onDeployScript".equals(type) && onDeployScriptSystemService != null) {
+                patchResult = onDeployScriptSystemService.runPatch(patchPath);
             }
 
             context.incrementProgressCount(progressCounter++);
