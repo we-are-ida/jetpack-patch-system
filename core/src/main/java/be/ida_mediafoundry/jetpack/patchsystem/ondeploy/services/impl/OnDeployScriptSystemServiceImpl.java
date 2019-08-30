@@ -51,6 +51,7 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
 
+    @Override
     public List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver) {
         List<PatchFileWithResultResource> patchFiles = new ArrayList<>();
 
@@ -67,6 +68,32 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
             });
 
         return patchFiles;
+    }
+
+    @Override
+    public List<PatchFile> getPatchesToExecute() {
+        List<PatchFile> patchFiles = new ArrayList<>();
+
+        onDeployScriptProvider
+                .forEach(provider -> {
+                    patchFiles.addAll(provider.getScripts()
+                                              .stream()
+                                              .map(item -> new OnDeployPatchFile(item, provider))
+                                              .filter(this::isExecutable)
+                                              .collect(Collectors.toList()));
+                });
+
+        return patchFiles;
+    }
+
+    @Override
+    public OnDeployPatchResult runPatch(String patchPath) {
+        if (onDeployExecutor != null) {
+            onDeployExecutor.executeScript(patchPath, true);
+
+            return patchResultRepository.getResult(patchPath);
+        }
+        return null;
     }
 
     @Override
@@ -98,34 +125,12 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
         return patchResult == null || patchResult.isError();
     }
 
-    @Override
-    public List<PatchFile> getPatchesToExecute() {
-        List<PatchFile> patchFiles = new ArrayList<>();
-
-        onDeployScriptProvider
-                .forEach(provider -> {
-                    patchFiles.addAll(provider.getScripts()
-                      .stream()
-                      .map(item -> new OnDeployPatchFile(item, provider))
-                      .filter(this::isExecutable)
-                      .collect(Collectors.toList()));
-                });
-
-        return patchFiles;
-    }
-
-    @Override
-    public OnDeployPatchResult runPatch(String patchPath) {
-        if (onDeployExecutor != null) {
-            onDeployExecutor.executeScript(patchPath, true);
-
-            return patchResultRepository.getResult(patchPath);
-        }
-        return null;
-    }
-
     protected void unbindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
         this.onDeployScriptProvider.remove(scriptProvider);
+    }
+
+    protected void bindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
+        this.onDeployScriptProvider.add(scriptProvider);
     }
 
     protected void unbindOnDeployExecutor() {

@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GroovyPatchSystemJobServiceImplTest {
+public class GroovyPatchSystemServiceImplTest {
 
     @InjectMocks
     private GroovyPatchSystemServiceImpl patchSystemService;
