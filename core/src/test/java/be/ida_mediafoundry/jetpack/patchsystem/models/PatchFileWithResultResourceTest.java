@@ -63,6 +63,7 @@ public class PatchFileWithResultResourceTest {
         assertThat(patchFileWithResult.getPath()).isEqualTo("/apps/patches/project-A/script-1.groovy");
         assertThat(patchFileWithResult.getScript()).isEqualTo("script-1.groovy");
         assertThat(patchFileWithResult.getDateExecuted()).isNull();
+        assertThat(patchFileWithResult.getThumbnail()).isEqualTo("context/apps/jetpack/patchsystem/components/thumb-groovy.png");
     }
 
     @Test

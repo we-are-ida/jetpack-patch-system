@@ -41,10 +41,6 @@ public class OnDeployScriptSystemServiceImplTest {
     @Mock
     private OnDeployScriptsResultRepository patchResultRepository;
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Test
     public void testIsPatchSystemReady_enabled() {
