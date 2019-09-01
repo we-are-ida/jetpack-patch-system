@@ -79,11 +79,9 @@ public class OnDeployScriptSystemServiceImplTest {
         assertThat(result).isFalse();
     }
 
-
-
     @Test
     public void testIsPatchSystemReady_noService() {
-        patchSystemService.unbindOnDeployExecutor();
+        patchSystemService.unbindOnDeployExecutor(null);
 
         boolean result = patchSystemService.isPatchSystemReady();
 
@@ -115,7 +113,7 @@ public class OnDeployScriptSystemServiceImplTest {
 
     @Test
     public void testRunPatch_withoutExecutor() {
-        patchSystemService.unbindOnDeployExecutor();
+        patchSystemService.unbindOnDeployExecutor(null);
 
         OnDeployPatchResult result = patchSystemService.runPatch("be.ida.script.Modify");
 
@@ -257,8 +255,8 @@ public class OnDeployScriptSystemServiceImplTest {
 
     private class TestScript extends OnDeployScriptBase {
         @Override
-        protected void execute() throws Exception {
-
+        protected void execute() {
+            //Some script action
         }
     }
 }

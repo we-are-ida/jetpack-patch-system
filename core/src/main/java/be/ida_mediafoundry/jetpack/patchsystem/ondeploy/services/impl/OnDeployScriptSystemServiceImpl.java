@@ -36,14 +36,12 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
     private static final Logger LOG = LoggerFactory.getLogger(OnDeployScriptSystemServiceImpl.class);
 
     @Reference(
-            name = "onDeployScriptProvider",
             cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
     private volatile List<OnDeployScriptProvider> onDeployScriptProvider = new CopyOnWriteArrayList<>();
 
     @Reference(
-            name = "onDeployExecutor",
             cardinality = ReferenceCardinality.OPTIONAL,
             policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
@@ -93,8 +91,11 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
     @Override
     public OnDeployPatchResult runPatch(String patchPath) {
         if (onDeployExecutor != null) {
-            onDeployExecutor.executeScript(patchPath, true);
-
+            try {
+                onDeployExecutor.executeScript(patchPath, true);
+            } catch (Exception e) {
+                LOG.error("failed to run " + patchPath);   
+            }
             return patchResultRepository.getResult(patchPath);
         }
         return null;
@@ -141,7 +142,7 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
         this.onDeployExecutor = onDeployExecutor;
     }
 
-    protected void unbindOnDeployExecutor() {
+    protected void unbindOnDeployExecutor(OnDeployExecutor onDeployExecutor) {
         this.onDeployExecutor = null;
     }
 }
