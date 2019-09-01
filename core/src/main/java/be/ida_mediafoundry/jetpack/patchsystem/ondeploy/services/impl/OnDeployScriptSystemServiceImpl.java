@@ -35,18 +35,22 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
 
     private static final Logger LOG = LoggerFactory.getLogger(OnDeployScriptSystemServiceImpl.class);
 
-    @Reference
-    private OnDeployScriptsResultRepository patchResultRepository;
-
-    @Reference(cardinality = ReferenceCardinality.MULTIPLE,
+    @Reference(
+            name = "onDeployScriptProvider",
+            cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
     private volatile List<OnDeployScriptProvider> onDeployScriptProvider = new CopyOnWriteArrayList<>();
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+    @Reference(
+            name = "onDeployExecutor",
+            cardinality = ReferenceCardinality.OPTIONAL,
             policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
     private volatile OnDeployExecutor onDeployExecutor;
+
+    @Reference
+    private OnDeployScriptsResultRepository patchResultRepository;
 
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
@@ -131,6 +135,10 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
 
     protected void bindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
         this.onDeployScriptProvider.add(scriptProvider);
+    }
+
+    protected void bindOnDeployExecutor(OnDeployExecutor onDeployExecutor) {
+        this.onDeployExecutor = onDeployExecutor;
     }
 
     protected void unbindOnDeployExecutor() {
