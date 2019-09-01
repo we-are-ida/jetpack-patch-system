@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 @Model(adaptables = Resource.class)
 public class GroovyPatchFile implements PatchFile {
 
+    public static final String TYPE = "groovy";
     @Self
     private Resource resource;
 
@@ -81,6 +82,6 @@ public class GroovyPatchFile implements PatchFile {
 
     @Override
     public String getType() {
-        return "groovy";
+        return TYPE;
     }
 }

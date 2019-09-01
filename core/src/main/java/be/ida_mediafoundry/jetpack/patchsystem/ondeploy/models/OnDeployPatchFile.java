@@ -6,6 +6,8 @@ import com.adobe.acs.commons.ondeploy.scripts.OnDeployScript;
 
 public class OnDeployPatchFile implements PatchFile {
 
+    public static final String TYPE = "onDeployScript";
+
     private String projectName;
     private String scriptTitle;
     private String path;
@@ -46,6 +48,6 @@ public class OnDeployPatchFile implements PatchFile {
 
     @Override
     public String getType() {
-        return "onDeployScript";
+        return TYPE;
     }
 }

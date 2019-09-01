@@ -37,7 +37,7 @@ public class HasPatchesToExecuteServletTest {
 
         servlet.doGet(slingHttpServletRequest, slingHttpServletResponse);
 
-        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"count\":0,\"patches\":[]}");
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"count\":0,\"patches\":[],\"readyStates\":{}}");
         assertThat(slingHttpServletResponse.getStatus()).isEqualTo(200);
     }
 
@@ -52,7 +52,7 @@ public class HasPatchesToExecuteServletTest {
 
         servlet.doGet(slingHttpServletRequest, slingHttpServletResponse);
 
-        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"count\":1,\"patches\":[{\"type\":\"groovy\",\"patchFile\":\"/apps/groovy.groovy\"}]}");
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"count\":1,\"patches\":[{\"type\":\"groovy\",\"patchFile\":\"/apps/groovy.groovy\"}],\"readyStates\":{}}");
         assertThat(slingHttpServletResponse.getStatus()).isEqualTo(200);
     }
 
@@ -68,7 +68,7 @@ public class HasPatchesToExecuteServletTest {
 
         servlet.doGet(slingHttpServletRequest, slingHttpServletResponse);
 
-        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"count\":2,\"patches\":[{\"type\":\"groovy\",\"patchFile\":\"/apps/groovy.groovy\"},{\"type\":\"other\",\"patchFile\":\"/apps/other.other\"}]}");
+        assertThat(slingHttpServletResponse.getOutputAsString()).isEqualTo("{\"count\":2,\"patches\":[{\"type\":\"groovy\",\"patchFile\":\"/apps/groovy.groovy\"},{\"type\":\"other\",\"patchFile\":\"/apps/other.other\"}],\"readyStates\":{}}");
         assertThat(slingHttpServletResponse.getStatus()).isEqualTo(200);
     }
 }

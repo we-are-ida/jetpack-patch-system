@@ -3,9 +3,11 @@ package be.ida_mediafoundry.jetpack.patchsystem.services.impl;
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
 import be.ida_mediafoundry.jetpack.patchsystem.executors.JobResult;
 import be.ida_mediafoundry.jetpack.patchsystem.executors.PatchJobExecutor;
+import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.models.PatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
+import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemJobService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -89,6 +91,21 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
         }
 
         return patchesToRun;
+    }
+
+    @Override
+    public Map<String, Boolean> getReadyStates() {
+        Map<String, Boolean> readyStates = new HashMap<>();
+
+        if (groovyPatchSystemService != null) {
+            readyStates.put(GroovyPatchFile.TYPE, groovyPatchSystemService.isPatchSystemReady());
+        }
+
+        if (onDeployScriptSystemService != null) {
+            readyStates.put(OnDeployPatchFile.TYPE, onDeployScriptSystemService.isPatchSystemReady());
+        }
+
+        return readyStates;
     }
 
     @Override

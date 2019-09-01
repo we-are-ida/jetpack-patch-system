@@ -1,8 +1,10 @@
 package be.ida_mediafoundry.jetpack.patchsystem.executors;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
+import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.models.PatchResult;
+import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.event.jobs.Job;
@@ -72,9 +74,9 @@ public class PatchJobExecutor implements JobExecutor {
             context.log("Executing patch '{0}' of type '{1}'", patchPath, types);
 
             PatchResult patchResult = null;
-            if ("groovy".equals(type) && groovyPatchSystemService != null) {
+            if (GroovyPatchFile.TYPE.equals(type) && groovyPatchSystemService != null) {
                 patchResult = groovyPatchSystemService.runPatch(patchPath);
-            } else if ("onDeployScript".equals(type) && onDeployScriptSystemService != null) {
+            } else if (OnDeployPatchFile.TYPE.equals(type) && onDeployScriptSystemService != null) {
                 patchResult = onDeployScriptSystemService.runPatch(patchPath);
             }
 

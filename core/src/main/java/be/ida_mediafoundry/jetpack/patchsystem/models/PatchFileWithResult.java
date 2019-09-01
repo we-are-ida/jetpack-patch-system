@@ -1,5 +1,6 @@
 package be.ida_mediafoundry.jetpack.patchsystem.models;
 
+import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile;
 import com.day.cq.commons.date.RelativeTimeFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -83,7 +84,7 @@ public class PatchFileWithResult {
     }
 
     private String getThumbnailUrl() {
-        if ("onDeployScript".equals(this.type)) {
+        if (OnDeployPatchFile.TYPE.equals(this.type)) {
             return "/apps/jetpack/patchsystem/components/thumb-ondeployscript.png"  ;
         }
         return "/apps/jetpack/patchsystem/components/thumb-groovy.png";

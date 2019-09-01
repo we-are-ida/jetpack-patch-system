@@ -52,8 +52,9 @@ public class HasPatchesToExecuteServlet extends SlingAllMethodsServlet {
 
     private void process(SlingHttpServletResponse response) throws IOException {
         List<SimplePatchFile> patches = patchSystemJobService.getAllPatchesToExecute();
-
         PatchesListResponse output = new PatchesListResponse(patches);
+
+        output.setReadyStates(patchSystemJobService.getReadyStates());
 
         Gson gson = new Gson();
         response.getWriter().write(gson.toJson(output));
