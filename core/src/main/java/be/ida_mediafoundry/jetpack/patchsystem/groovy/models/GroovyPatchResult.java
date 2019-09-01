@@ -115,8 +115,4 @@ public class GroovyPatchResult implements PatchResult {
         this.runningTime = runningTime;
     }
 
-    @Override
-    public boolean isError() {
-        return PatchStatus.ERROR.isOfStatus(this);
-    }
 }

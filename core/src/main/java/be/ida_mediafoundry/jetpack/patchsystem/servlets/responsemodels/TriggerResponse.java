@@ -1,5 +1,7 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels;
 
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
 public class TriggerResponse {
 
     private String message;
-    private List<String> patches;
+    private List<SimplePatchFile> patches;
 
     public String getMessage() {
         return message;
@@ -19,11 +21,11 @@ public class TriggerResponse {
         this.message = message;
     }
 
-    public List<String> getPatches() {
+    public List<SimplePatchFile> getPatches() {
         return patches;
     }
 
-    public void setPatches(List<String> patches) {
+    public void setPatches(List<SimplePatchFile> patches) {
         this.patches = patches;
     }
 }

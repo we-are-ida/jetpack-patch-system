@@ -20,5 +20,7 @@ public interface PatchResult {
 
     String getRunningTime();
 
-    boolean isError();
+    default boolean isError() {
+        return PatchStatus.ERROR.isOfStatus(this);
+    }
 }

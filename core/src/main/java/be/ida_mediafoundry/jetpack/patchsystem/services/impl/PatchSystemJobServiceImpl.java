@@ -1,13 +1,15 @@
 package be.ida_mediafoundry.jetpack.patchsystem.services.impl;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
-import be.ida_mediafoundry.jetpack.patchsystem.executors.PatchJobExecutor;
 import be.ida_mediafoundry.jetpack.patchsystem.executors.JobResult;
+import be.ida_mediafoundry.jetpack.patchsystem.executors.PatchJobExecutor;
 import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchFile;
+import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.models.PatchFile;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
+import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemJobService;
-import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.event.jobs.Job;
@@ -15,6 +17,8 @@ import org.apache.sling.event.jobs.JobManager;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,24 +40,37 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     @Reference
     private JobManager jobManager;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private GroovyPatchSystemService groovyPatchSystemService;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
-    public boolean executePatch(String patchPath, String type, boolean runnable) {
-        if (runnable) {
-            return executePatches(Collections.singletonList(patchPath));
-        }
-        return false;
+    public boolean executePatch(String patchPath, String type) {
+        return executePatches(Collections.singletonList(new SimplePatchFile(type, patchPath)));
     }
 
     @Override
-    public boolean executePatches(List<String> patchPaths) {
-        if (CollectionUtils.isNotEmpty(patchPaths)) {
-            Map<String, Object> properties = Collections.singletonMap(JetpackConstants.PATCH_PATHS, patchPaths);
+    public boolean executePatches(List<SimplePatchFile> patchFiles) {
+        if (CollectionUtils.isNotEmpty(patchFiles)) {
+
+            List<String> patchPaths = patchFiles
+                    .stream()
+                    .map(SimplePatchFile::getPatchFile)
+                    .collect(Collectors.toList());
+
+            List<String> types = patchFiles
+                    .stream()
+                    .map(SimplePatchFile::getType)
+                    .collect(Collectors.toList());
+
+            Map<String, Object> properties = new HashMap<>();
+            properties.put(JetpackConstants.PATCH_PATHS, patchPaths);
+            properties.put(JetpackConstants.TYPES, types);
+
             Job job =  jobManager.addJob(PatchJobExecutor.TOPIC, properties);
             return job != null;
         }
@@ -61,15 +78,15 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     }
 
     @Override
-    public List<String> executeNewPatches() {
-        List<String> patchesToRun = getAllPatchesToExecute();
+    public List<SimplePatchFile> executeNewPatches() {
+        List<SimplePatchFile> patchesToRun = getAllPatchesToExecute();
 
         if (!CollectionUtils.isEmpty(patchesToRun)) {
             boolean success = executePatches(patchesToRun);
             if (success) {
                 return patchesToRun;
             } else {
-                return null;
+                return new ArrayList<>();
             }
         }
 
@@ -77,12 +94,35 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
     }
 
     @Override
-    public List<String> getAllPatchesToExecute() {
-        List<PatchFile> patchFiles = groovyPatchSystemService.getPatchesToExecute();
+    public Map<String, Boolean> getReadyStates() {
+        Map<String, Boolean> readyStates = new HashMap<>();
+
+        if (groovyPatchSystemService != null) {
+            readyStates.put(GroovyPatchFile.TYPE, groovyPatchSystemService.isPatchSystemReady());
+        }
+
+        if (onDeployScriptSystemService != null) {
+            readyStates.put(OnDeployPatchFile.TYPE, onDeployScriptSystemService.isPatchSystemReady());
+        }
+
+        return readyStates;
+    }
+
+    @Override
+    public List<SimplePatchFile> getAllPatchesToExecute() {
+        List<PatchFile> patchFiles = new ArrayList<>();
+
+        if (groovyPatchSystemService != null && groovyPatchSystemService.isPatchSystemReady()) {
+            patchFiles.addAll(groovyPatchSystemService.getPatchesToExecute());
+        }
+
+        if (onDeployScriptSystemService != null && onDeployScriptSystemService.isPatchSystemReady()) {
+            patchFiles.addAll(onDeployScriptSystemService.getPatchesToExecute());
+        }
 
         return patchFiles
                 .stream()
-                .map(PatchFile::getPath)
+                .map(patchFile -> new SimplePatchFile(patchFile.getType(), patchFile.getPath()))
                 .collect(Collectors.toList());
     }
 
@@ -101,5 +141,13 @@ public class PatchSystemJobServiceImpl implements PatchSystemJobService {
         }
 
         return new JobResult(false);
+    }
+
+    protected void unbindOnDeployScriptSystemService() {
+        this.onDeployScriptSystemService = null;
+    }
+
+    protected void unbindGroovyPatchSystemService() {
+        this.groovyPatchSystemService = null;
     }
 }

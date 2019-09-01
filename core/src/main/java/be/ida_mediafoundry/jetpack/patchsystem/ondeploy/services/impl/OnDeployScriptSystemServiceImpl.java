@@ -7,6 +7,7 @@ import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchResult;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.repositories.OnDeployScriptsResultRepository;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
+import com.adobe.acs.commons.ondeploy.OnDeployExecutor;
 import com.adobe.acs.commons.ondeploy.OnDeployScriptProvider;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -34,19 +35,26 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
 
     private static final Logger LOG = LoggerFactory.getLogger(OnDeployScriptSystemServiceImpl.class);
 
-    @Reference
-    private OnDeployScriptsResultRepository patchResultRepository;
-
-    @Reference(cardinality = ReferenceCardinality.MULTIPLE,
+    @Reference(
+            cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC,
             policyOption = ReferencePolicyOption.GREEDY)
     private volatile List<OnDeployScriptProvider> onDeployScriptProvider = new CopyOnWriteArrayList<>();
 
+    @Reference(
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            policyOption = ReferencePolicyOption.GREEDY)
+    private volatile OnDeployExecutor onDeployExecutor;
+
+    @Reference
+    private OnDeployScriptsResultRepository patchResultRepository;
+
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
 
+    @Override
     public List<PatchFileWithResultResource> getPatches(ResourceResolver resourceResolver) {
-
         List<PatchFileWithResultResource> patchFiles = new ArrayList<>();
 
         onDeployScriptProvider
@@ -65,13 +73,42 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
     }
 
     @Override
+    public List<PatchFile> getPatchesToExecute() {
+        List<PatchFile> patchFiles = new ArrayList<>();
+
+        onDeployScriptProvider
+                .forEach(provider -> {
+                    patchFiles.addAll(provider.getScripts()
+                                              .stream()
+                                              .map(item -> new OnDeployPatchFile(item, provider))
+                                              .filter(this::isExecutable)
+                                              .collect(Collectors.toList()));
+                });
+
+        return patchFiles;
+    }
+
+    @Override
+    public OnDeployPatchResult runPatch(String patchPath) {
+        if (onDeployExecutor != null) {
+            try {
+                onDeployExecutor.executeScript(patchPath, true);
+            } catch (Exception e) {
+                LOG.error("failed to run " + patchPath);   
+            }
+            return patchResultRepository.getResult(patchPath);
+        }
+        return null;
+    }
+
+    @Override
     public boolean isPatchSystemReady() {
-        return !onDeployScriptProvider.isEmpty();
+        return onDeployExecutor != null && !onDeployScriptProvider.isEmpty();
     }
 
     /**
-     * Return the GroovyPatchResult for the provided Patch File.
-     * The GroovyPatchResult contains the actual run state of the patch.
+     * Return the OnDeployPatchResult for the provided Patch File.
+     * The OnDeployPatchResult contains the actual run state of the patch.
      *
      * @param patchFile patch file to get the result from/
      * @return result or null
@@ -95,5 +132,17 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
 
     protected void unbindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
         this.onDeployScriptProvider.remove(scriptProvider);
+    }
+
+    protected void bindOnDeployScriptProvider(OnDeployScriptProvider scriptProvider) {
+        this.onDeployScriptProvider.add(scriptProvider);
+    }
+
+    protected void bindOnDeployExecutor(OnDeployExecutor onDeployExecutor) {
+        this.onDeployExecutor = onDeployExecutor;
+    }
+
+    protected void unbindOnDeployExecutor(OnDeployExecutor onDeployExecutor) {
+        this.onDeployExecutor = null;
     }
 }

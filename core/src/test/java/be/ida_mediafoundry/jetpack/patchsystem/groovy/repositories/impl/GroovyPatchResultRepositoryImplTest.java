@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GroovyGroovyPatchResultRepositoryImplTest {
+public class GroovyPatchResultRepositoryImplTest {
 
     @InjectMocks
     private GroovyPatchResultRepositoryImpl repository;

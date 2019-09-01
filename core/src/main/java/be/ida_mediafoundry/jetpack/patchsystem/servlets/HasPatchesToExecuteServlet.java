@@ -1,8 +1,8 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemJobService;
-import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
 import be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels.PatchesListResponse;
 import com.google.gson.Gson;
 import org.apache.http.entity.ContentType;
@@ -38,9 +38,6 @@ public class HasPatchesToExecuteServlet extends SlingAllMethodsServlet {
     @Reference
     private PatchSystemJobService patchSystemJobService;
 
-    @Reference
-    private GroovyPatchSystemService patchSystemService;
-
     @Override
     protected void doGet(SlingHttpServletRequest request, SlingHttpServletResponse response) {
         response.setContentType(ContentType.APPLICATION_JSON.getMimeType());
@@ -54,9 +51,10 @@ public class HasPatchesToExecuteServlet extends SlingAllMethodsServlet {
     }
 
     private void process(SlingHttpServletResponse response) throws IOException {
-        List<String> patches = patchSystemJobService.getAllPatchesToExecute();
-
+        List<SimplePatchFile> patches = patchSystemJobService.getAllPatchesToExecute();
         PatchesListResponse output = new PatchesListResponse(patches);
+
+        output.setReadyStates(patchSystemJobService.getReadyStates());
 
         Gson gson = new Gson();
         response.getWriter().write(gson.toJson(output));

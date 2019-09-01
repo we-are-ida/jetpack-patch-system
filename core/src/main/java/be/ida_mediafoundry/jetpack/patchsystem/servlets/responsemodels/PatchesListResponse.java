@@ -1,8 +1,10 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels;
 
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author michael
@@ -11,9 +13,11 @@ import java.util.List;
 public class PatchesListResponse {
 
     private int count;
-    private List<String> patches;
+    private List<SimplePatchFile> patches;
 
-    public PatchesListResponse(List<String> patches) {
+    private Map<String, Boolean> readyStates;
+
+    public PatchesListResponse(List<SimplePatchFile> patches) {
         this.patches = patches;
         if (CollectionUtils.isNotEmpty(this.patches)) {
             this.count = this.patches.size();
@@ -24,7 +28,15 @@ public class PatchesListResponse {
         return count;
     }
 
-    public List<String> getPatches() {
+    public List<SimplePatchFile> getPatches() {
         return patches;
+    }
+
+    public Map<String, Boolean> getReadyStates() {
+        return readyStates;
+    }
+
+    public void setReadyStates(Map<String, Boolean> readyStates) {
+        this.readyStates = readyStates;
     }
 }

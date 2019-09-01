@@ -1,0 +1,20 @@
+{
+    "jcr:primaryType": "nt:folder",
+    "be.ida.script.Modify-running": {
+      "jcr:primaryType": "nt:unstructured",
+      "status": "RUNNING",
+      "startDate": "Thu Sep 06 2018 15:16:06 GMT+0200"
+    },
+    "be.ida.script.Modify-fail": {
+      "jcr:primaryType": "nt:unstructured",
+      "status": "fail",
+      "output": "This is the error message",
+      "startDate": "Thu Sep 06 2018 15:16:06 GMT+0200"
+    },
+    "be.ida.script.Modify-success": {
+      "jcr:primaryType": "nt:unstructured",
+      "status": "SUCCESS",
+      "startDate": "Thu Sep 06 2018 15:16:06 GMT+0200",
+      "endDate": "Thu Sep 06 2018 15:20:06 GMT+0200"
+    }
+}

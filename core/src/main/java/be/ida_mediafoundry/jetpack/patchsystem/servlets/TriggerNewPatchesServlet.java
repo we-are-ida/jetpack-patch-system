@@ -1,7 +1,7 @@
 package be.ida_mediafoundry.jetpack.patchsystem.servlets;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
-import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
+import be.ida_mediafoundry.jetpack.patchsystem.models.SimplePatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.services.PatchSystemJobService;
 import be.ida_mediafoundry.jetpack.patchsystem.servlets.responsemodels.TriggerResponse;
 import com.google.gson.Gson;
@@ -10,7 +10,6 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.ServletResolverConstants;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
-import org.json.JSONException;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,9 +38,6 @@ public class TriggerNewPatchesServlet extends SlingAllMethodsServlet {
     @Reference
     private PatchSystemJobService patchSystemJobService;
 
-    @Reference
-    private OnDeployScriptSystemService onDeployScriptSystemService;
-
     @Override
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) {
         try {
@@ -61,8 +57,8 @@ public class TriggerNewPatchesServlet extends SlingAllMethodsServlet {
         return JetpackConstants.APPLICATION_JSON.equals(request.getContentType());
     }
 
-    private void process(SlingHttpServletResponse response) throws JSONException, IOException {
-        List<String> patches = patchSystemJobService.executeNewPatches();
+    private void process(SlingHttpServletResponse response) throws IOException {
+        List<SimplePatchFile> patches = patchSystemJobService.executeNewPatches();
 
         TriggerResponse triggerResponse = new TriggerResponse();
         if (patches == null) {
@@ -75,12 +71,6 @@ public class TriggerNewPatchesServlet extends SlingAllMethodsServlet {
             triggerResponse.setMessage("Success.");
             triggerResponse.setPatches(patches);
             response.setStatus(HttpServletResponse.SC_OK);
-        }
-
-        if (onDeployScriptSystemService.isPatchSystemReady()) {
-            String message = triggerResponse.getMessage();
-            triggerResponse.setMessage(message
-                    + " On Deploy Scripts cannot be triggered using the Patch System.");
         }
 
         Gson gson = new Gson();

@@ -3,9 +3,10 @@ package be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models;
 import be.ida_mediafoundry.jetpack.patchsystem.models.PatchFile;
 import com.adobe.acs.commons.ondeploy.OnDeployScriptProvider;
 import com.adobe.acs.commons.ondeploy.scripts.OnDeployScript;
-import org.apache.commons.lang3.StringUtils;
 
 public class OnDeployPatchFile implements PatchFile {
+
+    public static final String TYPE = "onDeployScript";
 
     private String projectName;
     private String scriptTitle;
@@ -16,15 +17,7 @@ public class OnDeployPatchFile implements PatchFile {
             this.path = onDeployScript.getClass().getName();
             this.projectName = onDeployScriptProvider.getClass().getSimpleName();
 
-            if (onDeployScript instanceof OnDeployScriptPatch) {
-                scriptTitle = ((OnDeployScriptPatch) onDeployScript).name();
-            }
-        }
-
-        if (StringUtils.isBlank(scriptTitle)) {
             this.scriptTitle = this.path;
-        } else {
-            this.scriptTitle += " (" + this.path + ")";
         }
     }
 
@@ -50,11 +43,11 @@ public class OnDeployPatchFile implements PatchFile {
 
     @Override
     public boolean isRunnable() {
-        return false;
+        return true;
     }
 
     @Override
     public String getType() {
-        return "onDeployScript";
+        return TYPE;
     }
 }

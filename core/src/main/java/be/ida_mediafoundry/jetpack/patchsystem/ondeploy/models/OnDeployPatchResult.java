@@ -1,10 +1,11 @@
 package be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models;
 
-import be.ida_mediafoundry.jetpack.patchsystem.models.PatchResult;
-import be.ida_mediafoundry.jetpack.patchsystem.utils.DateUtils;
 import be.ida_mediafoundry.jetpack.carve.annotations.CarveId;
 import be.ida_mediafoundry.jetpack.carve.annotations.CarveModel;
 import be.ida_mediafoundry.jetpack.carve.manager.pathpolicy.providers.SimplePathPolicyProvider;
+import be.ida_mediafoundry.jetpack.patchsystem.models.PatchResult;
+import be.ida_mediafoundry.jetpack.patchsystem.models.PatchStatus;
+import be.ida_mediafoundry.jetpack.patchsystem.utils.DateUtils;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.Optional;
@@ -34,7 +35,8 @@ public class OnDeployPatchResult implements PatchResult {
     @Optional
     private Calendar endDate;
 
-    //TODO try to get output
+    @Inject
+    @Optional
     private String output;
 
     private String runningTime;
@@ -42,7 +44,7 @@ public class OnDeployPatchResult implements PatchResult {
     @PostConstruct
     protected void initModel() {
         if (FAIL.equals(this.status)) {
-            this.status = "ERROR";
+            this.status = PatchStatus.ERROR.displayName();
         }
         this.status = status.toUpperCase();
 
@@ -71,10 +73,5 @@ public class OnDeployPatchResult implements PatchResult {
 
     public String getRunningTime() {
         return runningTime;
-    }
-
-    @Override
-    public boolean isError() {
-        return getStatus().equals("ERROR");
     }
 }

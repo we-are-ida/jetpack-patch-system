@@ -1,8 +1,10 @@
 package be.ida_mediafoundry.jetpack.patchsystem.executors;
 
 import be.ida_mediafoundry.jetpack.patchsystem.JetpackConstants;
-import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchResult;
+import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.groovy.services.GroovyPatchSystemService;
+import be.ida_mediafoundry.jetpack.patchsystem.models.PatchResult;
+import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchFile;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.services.OnDeployScriptSystemService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.sling.event.jobs.Job;
@@ -11,6 +13,8 @@ import org.apache.sling.event.jobs.consumer.JobExecutionResult;
 import org.apache.sling.event.jobs.consumer.JobExecutor;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +25,7 @@ import java.util.List;
  * @since : 09/11/2018
  */
 @Component(
+        immediate = true,
         service = JobExecutor.class,
         property = {JobExecutor.PROPERTY_TOPICS + "=" + PatchJobExecutor.TOPIC}
 )
@@ -30,10 +35,12 @@ public class PatchJobExecutor implements JobExecutor {
     private static final Logger LOG = LoggerFactory.getLogger(PatchJobExecutor.class);
     private static final long ETA = -1L;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private GroovyPatchSystemService groovyPatchSystemService;
 
-    @Reference
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL,
+            policyOption = ReferencePolicyOption.GREEDY)
     private OnDeployScriptSystemService onDeployScriptSystemService;
 
     @Override
@@ -43,8 +50,10 @@ public class PatchJobExecutor implements JobExecutor {
 
         try {
             List<String> patchPaths = job.getProperty(JetpackConstants.PATCH_PATHS, List.class);
+            List<String> types = job.getProperty(JetpackConstants.TYPES, List.class);
+
             if (CollectionUtils.isNotEmpty(patchPaths)) {
-                executePatches(patchPaths, context);
+                executePatches(patchPaths, types, context);
             }
         } catch (Exception e) {
             result = context.result().message(e.getMessage()).failed();
@@ -54,17 +63,30 @@ public class PatchJobExecutor implements JobExecutor {
         return result;
     }
 
-    private void executePatches(List<String> patchPaths, JobExecutionContext context) {
+    private void executePatches(List<String> patchPaths, List<String> types, JobExecutionContext context) {
         int progressCounter = 1;
         context.initProgress(patchPaths.size(), ETA);
 
-        for (String patchPath : patchPaths) {
-            context.log("Executing patch '{0}'", patchPath);
+        for (int i = 0; i < patchPaths.size(); i++) {
+            String patchPath = patchPaths.get(i);
+            String type = types.get(i);
 
-            GroovyPatchResult patchResult = groovyPatchSystemService.runPatch(patchPath);
+            context.log("Executing patch '{0}' of type '{1}'", patchPath, types);
+
+            PatchResult patchResult = null;
+            if (GroovyPatchFile.TYPE.equals(type) && groovyPatchSystemService != null) {
+                patchResult = groovyPatchSystemService.runPatch(patchPath);
+            } else if (OnDeployPatchFile.TYPE.equals(type) && onDeployScriptSystemService != null) {
+                patchResult = onDeployScriptSystemService.runPatch(patchPath);
+            }
 
             context.incrementProgressCount(progressCounter++);
-            context.log("Executed patch '{0}' - RESULT '{1}' - RUNNING TIME '{2}'", patchPath, patchResult.getStatus(), patchResult.getRunningTime());
+
+            if (patchResult != null) {
+                context.log("Executed patch '{0}' - RESULT '{1}' - RUNNING TIME '{2}'", patchPath, patchResult.getStatus(), patchResult.getRunningTime());
+            } else {
+                context.log("Not Executed patch '{0}' - No runner found for type '{1}'", patchPath, type);
+            }
         }
     }
 }

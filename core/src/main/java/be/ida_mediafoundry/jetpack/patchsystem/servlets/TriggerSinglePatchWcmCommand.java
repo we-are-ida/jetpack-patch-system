@@ -27,6 +27,8 @@ import org.osgi.service.component.annotations.Reference;
         })
 public class TriggerSinglePatchWcmCommand implements WCMCommand {
 
+    private static final String TYPE_PARAM = "type";
+
     @Reference
     private PatchSystemJobService patchSystemJobService;
 
@@ -42,20 +44,14 @@ public class TriggerSinglePatchWcmCommand implements WCMCommand {
                                        PageManager pageManager) {
 
         RequestParameter path = slingHttpServletRequest.getRequestParameter(PATH_PARAM);
-        RequestParameter type = slingHttpServletRequest.getRequestParameter("type");
-        RequestParameter runnable = slingHttpServletRequest.getRequestParameter("runnable");
-
-        boolean runEnabled = false;
-        if (runnable != null && "yes".equals(runnable.getString())) {
-            runEnabled = true;
-        }
+        RequestParameter type = slingHttpServletRequest.getRequestParameter(TYPE_PARAM);
 
         HtmlResponse resp = null;
         try {
-            boolean success = patchSystemJobService.executePatch(path.getString(), type.getString(), runEnabled);
+            boolean success = patchSystemJobService.executePatch(path.getString(), type.getString());
 
             resp = HtmlStatusResponseHelper.createStatusResponse(success, "executed",
-                    path.getString());
+                    null);
         } catch (Exception e) {
             resp = HtmlStatusResponseHelper.createStatusResponse(false, e.getMessage());
         }

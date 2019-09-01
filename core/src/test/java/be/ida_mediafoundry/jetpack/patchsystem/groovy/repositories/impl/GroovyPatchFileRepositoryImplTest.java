@@ -16,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class GroovyGroovyPatchFileRepositoryImplTest {
+public class GroovyPatchFileRepositoryImplTest {
 
     @Rule
     public final AemContext context = new AemContext();
