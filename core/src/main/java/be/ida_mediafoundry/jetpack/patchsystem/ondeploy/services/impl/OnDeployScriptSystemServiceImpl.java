@@ -106,8 +106,8 @@ public class OnDeployScriptSystemServiceImpl implements OnDeployScriptSystemServ
     }
 
     /**
-     * Return the GroovyPatchResult for the provided Patch File.
-     * The GroovyPatchResult contains the actual run state of the patch.
+     * Return the OnDeployPatchResult for the provided Patch File.
+     * The OnDeployPatchResult contains the actual run state of the patch.
      *
      * @param patchFile patch file to get the result from/
      * @return result or null

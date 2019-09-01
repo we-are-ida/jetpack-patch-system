@@ -2,10 +2,7 @@ package be.ida_mediafoundry.jetpack.patchsystem.ondeploy.repositories.impl;
 
 import be.ida_mediafoundry.jetpack.carve.manager.ModelManager;
 import be.ida_mediafoundry.jetpack.carve.manager.exception.ModelManagerException;
-import be.ida_mediafoundry.jetpack.patchsystem.groovy.models.GroovyPatchResult;
 import be.ida_mediafoundry.jetpack.patchsystem.ondeploy.models.OnDeployPatchResult;
-import io.wcm.testing.mock.aem.junit.AemContext;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
