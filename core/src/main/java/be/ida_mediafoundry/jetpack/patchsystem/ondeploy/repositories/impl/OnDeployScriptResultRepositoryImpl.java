@@ -31,7 +31,7 @@ public class OnDeployScriptResultRepositoryImpl implements OnDeployScriptsResult
         try {
             patchResult = modelManager.retrieve(OnDeployPatchResult.class, patchFile);
         } catch (ModelManagerException e) {
-            LOG.error("Couldn't get GroovyPatchResult", e);
+            LOG.error("Couldn't get OnDeployScriptResult", e);
         }
 
         return patchResult;
