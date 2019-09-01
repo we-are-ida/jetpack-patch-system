@@ -8,17 +8,28 @@ Navigate to http://localhost:4502/jetpack/patch-system.html to see this tool in 
 
 ## Description
 
-The JetPack Patch System allows you to check-in groovy scripts in the code base, which can be deployed to AEM.
+The JetPack Patch System allows you to check-in groovy scripts / ACS On-Deploy Scripts in the code base, which can be deployed to AEM.
 AEM can run these patches using a system that will never run a patch that was executed before, unless modified.
 
 A Touch UI overview screen provided insights in all patches and their execution state.
 
 # Pre-requisites
 
-Download and install ICF Olson Groovy Console: https://github.com/OlsonDigital/aem-groovy-console#installation
-(We have a dependency to 13.0.0, other version might work as well, but is not tested)
+Install Carve as Model Manager: https://jetpack.ida-mediafoundry.io/libraries/carve.html
+(We have a dependency to 1.1.0, other versions might work as well, but is not tested)
 
-# Patch Management
+### Groovy Console
+Download and install ICF Olson Groovy Console: https://github.com/OlsonDigital/aem-groovy-console#installation
+(We have a dependency to 13.0.0, other versions might work as well, but is not tested)
+
+### ACS On-Deploy Scripts
+Download and install ACS Commons: https://adobe-consulting-services.github.io/acs-aem-commons/
+(We have a dependency to 4.3., other versions might word as well, but is not tested)
+
+1 or both of these projects need to be installed to have working Patch System. 
+Both installed also works, if you want to support both Groovy Patches and On Deploy Scripts.
+
+# Groovy Patch Management
 
 Upload all patches to /apps/patches/<project>/<patch>.groovy
 * /apps/patches is a sling:Folder
@@ -28,6 +39,14 @@ Upload all patches to /apps/patches/<project>/<patch>.groovy
 It's also possible to nest & group multiple project folders.
 
 _Recommendation_: per installed zip, upload to 1 <project> folder.
+
+# ACS On-Deploy Scripts Patch Management
+
+Follow the instructions: https://adobe-consulting-services.github.io/acs-aem-commons/features/on-deploy-scripts/index.html
+
+# Examples
+
+See https://github.com/ida-mediafoundry/jetpack-patch-system-samples
 
 # User configuration
 
