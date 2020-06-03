@@ -39,6 +39,7 @@
             <list
                 granite:rel="jetpack-admin-patchsystem"
                 jcr:primaryType="nt:unstructured"
+                itemResourceType="/apps/jetpack/patchsystem/components/resourceconfig"
                 sling:resourceType="granite/ui/components/coral/foundation/table"
                 itemprop="item"
                 layoutId="list"
